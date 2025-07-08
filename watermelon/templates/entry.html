@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if entry[3] %}{{ entry[3] }}{% else %}Entry #{{ entry[0] }}{% endif %} - My Diary</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f7f4;
+            color: #333;
+        }
+        
+        .back-link {
+            color: #3498db;
+            text-decoration: none;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .entry-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 5px solid #3498db;
+        }
+        
+        .entry-header {
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .entry-title {
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .entry-meta {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        
+        .entry-content {
+            line-height: 1.8;
+            font-size: 1.1em;
+            white-space: pre-wrap;
+        }
+        
+        .entry-footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #ecf0f1;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-link">← Back to All Entries</a>
+    
+    <div class="entry-container">
+        <div class="entry-header">
+            <h1 class="entry-title">
+                {% if entry[3] %}
+                    {{ entry[3] }}
+                {% else %}
+                    Entry #{{ entry[0] }}
+                {% endif %}
+            </h1>
+            <div class="entry-meta">
+                <strong>Date:</strong> {{ entry[2] }}<br>
+                <strong>Entry ID:</strong> {{ entry[1] if entry[1] else 'N/A' }}
+            </div>
+        </div>
+        
+        <div class="entry-content">{{ entry[4] }}</div>
+        
+        <div class="entry-footer">
+            <strong>Created:</strong> {{ entry[5] }}<br>
+            <strong>Last Updated:</strong> {{ entry[6] }}
+        </div>
+    </div>
+</body>
+</html>

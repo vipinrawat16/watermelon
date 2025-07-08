@@ -1,0 +1,1672 @@
+* {
+  box-sizing: border-box;
+  cursor: none;
+}
+
+.login{
+    background: url('https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExeWptY2ZpcXB5aWdweDZ6dDVlem45MXFrZG9mMzJmcHV0cjNmdTcydCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oz8xDzuVDbKoU4shi/giphy.gif') no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* Or if using a body class */
+body.login {
+    background: url('https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExeWptY2ZpcXB5aWdweDZ6dDVlem45MXFrZG9mMzJmcHV0cjNmdTcydCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oz8xDzuVDbKoU4shi/giphy.gif') no-repeat center center fixed;
+
+}
+
+html{
+  scroll-behavior:auto;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-size: cover;
+  cursor: none;
+  position: relative;
+}
+
+/* Floating cute elements */
+.floating-elements {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.floating-elements::before,
+.floating-elements::after {
+  content: '🍉';
+  position: absolute;
+  font-size: 2rem;
+  animation: float 6s ease-in-out infinite;
+  opacity: 0.3;
+}
+
+.floating-elements::before {
+  top: 10%;
+  left: 10%;
+  animation-delay: -2s;
+}
+
+.floating-elements::after {
+  top: 20%;
+  right: 15%;
+  animation-delay: -4s;
+}
+
+/* Watermelon cursor */
+.cursor {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: none;
+}
+
+.cursor::after {
+  content: '🍉';
+  font-size: 28px;
+  animation: wiggle 2s ease-in-out infinite;
+}
+
+/* Position form in the bottom-right corner */
+.container {
+  position: absolute;
+  top: 50%;
+  right: 0px; /* Distance from right */
+  left: 73%;
+  transform: translateY(-60%);
+  z-index: 10;
+}
+
+/* Cute form box */
+.form-side {
+  background: linear-gradient(145deg, rgba(255, 182, 193, 0.95), rgba(255, 192, 203, 0.98));
+  padding: 60px;
+  border-radius: 30px;
+  box-shadow: 0 8px 25px rgba(255, 105, 180, 0.4), 0 0 50px rgba(255, 182, 193, 0.3);
+  max-width: 350px;
+  width: 100%;
+  color: #333;
+  cursor: none;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 3px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+.form-side:hover {
+  transform: scale(1.05) rotate(1deg);
+  box-shadow: 0 15px 35px rgba(255, 105, 180, 0.6), 0 0 60px rgba(255, 182, 193, 0.5);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.login-container h2 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: #d6336c;
+  text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.3);
+  animation: bounce 2s infinite;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  cursor: none;
+}
+
+input, button {
+  padding: 12px;
+  font-size: 14px;
+  border: none;
+  border-radius: 10px;
+  cursor: none;
+}
+
+input {
+  background: linear-gradient(145deg, #fff, #fffafa);
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1), 0 0 15px rgba(255, 182, 193, 0.2);
+  border: 2px solid rgba(255, 182, 193, 0.3);
+  transition: all 0.3s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: rgba(255, 105, 180, 0.6);
+  box-shadow: 0 0 20px rgba(255, 105, 180, 0.4), inset 0 0 5px rgba(255, 182, 193, 0.2);
+  transform: scale(1.02);
+}
+
+button {
+  background: linear-gradient(145deg, #ff69b4, #ff1493, #d6336c);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  cursor: none;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+button:hover {
+  background: linear-gradient(145deg, #ff1493, #dc143c, #b02a50);
+  transform: scale(1.08) translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 105, 180, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+button:hover::before {
+  left: 100%;
+}
+
+/* Flash messages */
+.flash-messages {
+  margin-bottom: 25px;
+}
+
+.alert {
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.alert-warning {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+/* Register/Login link */
+.register-link {
+  margin-top: 20px;
+  text-align: center;
+  cursor: none;
+}
+
+.register-link p {
+  margin: 0;
+  font-size: 16px;
+  color: #666;
+  cursor: none;
+}
+
+.register-link a {
+  color: #d6336c;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: none;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+  cursor: none;
+}
+
+/* Welcome page actions */
+.welcome-actions {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.logout-btn {
+  display: inline-block;
+  padding: 16px 32px;
+  background-color: #dc3545;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  cursor: none;
+}
+
+.logout-btn:hover {
+  background-color: #c82333;
+  transform: scale(1.05);
+}
+
+/* Welcome message */
+.login-container p {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 20px;
+  cursor: none;
+}
+
+/* Navigation Bar */
+.navbar {
+  background: linear-gradient(135deg, #ff69b4, #d6336c);
+  padding: 1rem 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.nav-brand h1 {
+  color: white;
+  margin: 0;
+  font-size: 1.8rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  animation: bounce 3s ease-in-out infinite;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.nav-link.logout {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.nav-link.logout:hover {
+  background: #dc3545;
+  border-color: #dc3545;
+}
+
+/* Microsoft 365 Copilot Button */
+.copilot-btn {
+  background: linear-gradient(135deg, #0078d4, #106ebe);
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 14px;
+  box-shadow: 0 2px 5px rgba(0, 120, 212, 0.3);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  animation: glow 3s ease-in-out infinite;
+}
+
+/* Spotify Navigation Button */
+.spotify-nav-btn {
+  background: linear-gradient(135deg, #1db954, #1ed760);
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 14px;
+  box-shadow: 0 2px 5px rgba(29, 185, 84, 0.3);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  animation: glow 3s ease-in-out infinite;
+}
+
+.copilot-btn:hover {
+  background: linear-gradient(135deg, #106ebe, #005a9e);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 120, 212, 0.4);
+}
+
+.copilot-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(0, 120, 212, 0.3);
+}
+
+.spotify-nav-btn:hover {
+  background: linear-gradient(135deg, #1ed760, #17a743);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(29, 185, 84, 0.4);
+}
+
+.spotify-nav-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(29, 185, 84, 0.3);
+}
+
+.copilot-icon {
+  font-size: 16px;
+  animation: pulse 2s infinite;
+}
+
+.copilot-text {
+  font-weight: 600;
+}
+
+.spotify-nav-icon {
+  font-size: 16px;
+  animation: pulse 2s infinite;
+}
+
+.spotify-nav-text {
+  font-weight: 600;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(1deg); }
+  75% { transform: rotate(-1deg); }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(255, 105, 180, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.6), 0 0 30px rgba(255, 182, 193, 0.4);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-20px) rotate(5deg);
+  }
+  66% {
+    transform: translateY(-10px) rotate(-3deg);
+  }
+}
+
+@keyframes sparkle {
+  0% {
+    transform: scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1) rotate(180deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Sparkle effect */
+.sparkle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  font-size: 20px;
+  animation: sparkle 1s ease-out forwards;
+}
+
+/* Focus Mode Styles */
+.focus-timer {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.timer-display {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #d6336c;
+  font-family: 'Courier New', monospace;
+  text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.3);
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: linear-gradient(145deg, rgba(255, 182, 193, 0.1), rgba(255, 250, 250, 0.2));
+  border-radius: 15px;
+  border: 2px solid rgba(255, 182, 193, 0.3);
+}
+
+.focus-controls {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.focus-btn {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  font-size: 0.9rem;
+  box-shadow: 0 4px 15px rgba(255, 105, 180, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.focus-btn.start-btn {
+  background: linear-gradient(145deg, #28a745, #20c997);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.focus-btn.start-btn:hover {
+  background: linear-gradient(145deg, #20c997, #17a2b8);
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+}
+
+.focus-btn.pause-btn {
+  background: linear-gradient(145deg, #ffc107, #fd7e14);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.focus-btn.pause-btn:hover {
+  background: linear-gradient(145deg, #fd7e14, #dc3545);
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+}
+
+.focus-btn.stop-btn {
+  background: linear-gradient(145deg, #dc3545, #c82333);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.focus-btn.stop-btn:hover {
+  background: linear-gradient(145deg, #c82333, #a71e2a);
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+}
+
+.focus-stats {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.stat-item-focus {
+  flex: 1;
+  text-align: center;
+  padding: 0.8rem;
+  background: linear-gradient(145deg, rgba(255, 182, 193, 0.1), rgba(255, 250, 250, 0.2));
+  border-radius: 10px;
+  border: 1px solid rgba(255, 182, 193, 0.2);
+}
+
+.stat-label-focus {
+  display: block;
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 0.3rem;
+  font-weight: bold;
+}
+
+.stat-value-focus {
+  display: block;
+  font-size: 1.1rem;
+  color: #d6336c;
+  font-weight: bold;
+}
+
+/* Focus Mode Active State */
+#focusModeCard.focus-active {
+  background: linear-gradient(145deg, #e8f5e8, #f0fff0);
+  border-color: rgba(40, 167, 69, 0.4);
+  box-shadow: 0 15px 35px rgba(40, 167, 69, 0.2), 0 0 60px rgba(40, 167, 69, 0.1);
+}
+
+#focusModeCard.focus-active .timer-display {
+  color: #28a745;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+#focusModeCard.focus-paused {
+  background: linear-gradient(145deg, #fff3cd, #ffeaa7);
+  border-color: rgba(255, 193, 7, 0.4);
+}
+
+#focusModeCard.focus-paused .timer-display {
+  color: #ffc107;
+}
+
+/* Dashboard Styles */
+.dashboard-main,
+.profile-main,
+.settings-main {
+  margin-top: 80px;
+  padding: 3rem;
+  margin-bottom: 10px;
+  min-height: calc(100vh - 80px);
+  background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+}
+
+.dashboard-container,
+.profile-container,
+.settings-container {
+  max-width: 2000px;
+  margin: 0 auto;
+  overflow-y: visible;
+  height: auto;
+}
+
+.welcome-section,
+.settings-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.welcome-section h2,
+.settings-header h1 {
+  font-size: 2.5rem;
+  color: #d6336c;
+  margin-bottom: 0.5rem;
+}
+
+.welcome-section p,
+.settings-header p {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 2fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.dashboard-card {
+  background: linear-gradient(145deg, #ffffff, #fefefe, #fffafa);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(255, 105, 180, 0.15), 0 0 40px rgba(255, 182, 193, 0.1);
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  text-align: center;
+  border: 3px solid rgba(255, 182, 193, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-15px) scale(1.03) rotate(1deg);
+  box-shadow: 0 25px 50px rgba(255, 105, 180, 0.3), 0 0 60px rgba(255, 182, 193, 0.2);
+  border-color: rgba(255, 105, 180, 0.4);
+}
+
+.dashboard-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 182, 193, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.dashboard-card:hover::before {
+  opacity: 1;
+}
+
+.card-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+  filter: drop-shadow(2px 2px 4px rgba(255, 105, 180, 0.3));
+}
+
+.dashboard-card:hover .card-icon {
+  transform: scale(1.2) rotate(10deg);
+  filter: drop-shadow(4px 4px 8px rgba(255, 105, 180, 0.5));
+}
+
+.card-content h3 {
+  color: #d6336c;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+
+.card-content p {
+  color: #666;
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.card-button {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(145deg, #ff69b4, #ff1493, #d6336c);
+  color: white;
+  text-decoration: none;
+  border-radius: 25px;
+  font-weight: bold;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-button:hover {
+  background: linear-gradient(145deg, #ff1493, #dc143c, #b02a50);
+  transform: scale(1.08) translateY(-3px);
+  box-shadow: 0 8px 25px rgba(255, 105, 180, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.card-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.card-button:hover::before {
+  left: 100%;
+}
+
+/* Features Section */
+.features-section {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.features-section h3 {
+  font-size: 2rem;
+  color: #d6336c;
+  margin-bottom: 2rem;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.feature-item {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(255, 250, 250, 0.95));
+  padding: 1.5rem;
+  border-radius: 20px;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  border: 2px solid rgba(255, 182, 193, 0.2);
+  box-shadow: 0 4px 15px rgba(255, 105, 180, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-item:hover {
+  transform: translateY(-8px) scale(1.02) rotate(1deg);
+  background: linear-gradient(145deg, white, #fffafa);
+  border-color: rgba(255, 105, 180, 0.4);
+  box-shadow: 0 8px 25px rgba(255, 105, 180, 0.2), 0 0 30px rgba(255, 182, 193, 0.1);
+}
+
+.feature-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.feature-item h4 {
+  color: #d6336c;
+  margin-bottom: 0.5rem;
+}
+
+.feature-item p {
+  color: #666;
+  font-size: 1rem;
+}
+
+/* Profile Styles */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  margin-bottom: 3rem;
+  background: white;
+  padding: 3rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.profile-avatar {
+  flex-shrink: 0;
+}
+
+.avatar-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff69b4, #d6336c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: white;
+  font-weight: bold;
+}
+
+.profile-info h1 {
+  font-size: 2.5rem;
+  color: #d6336c;
+  margin-bottom: 0.5rem;
+}
+
+.profile-subtitle {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.profile-badges {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.badge {
+  background: #ff69b4;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+/* Profile Grid */
+.profile-grid,
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.profile-card,
+.settings-card {
+  background: white;
+  border-radius: 20px;
+  padding: 3rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.profile-card h3,
+.settings-card h3 {
+  color: #d6336c;
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+}
+
+/* Info Grid */
+.info-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.info-item label {
+  font-weight: bold;
+  color: #666;
+}
+
+.info-item span {
+  color: #333;
+}
+
+.status-active {
+  color: #28a745 !important;
+  font-weight: bold;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ff69b4;
+  margin-bottom: 0.3rem;
+}
+
+.stat-label {
+  font-size: 1rem;
+  color: #666;
+}
+
+/* Security Items */
+.security-items,
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.security-item,
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.security-icon,
+.activity-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.security-info,
+.activity-info {
+  flex: 1;
+}
+
+.security-info strong,
+.activity-info strong {
+  color: #333;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.security-info p,
+.activity-info p {
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Action Buttons */
+.profile-actions,
+.settings-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.action-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 25px;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.action-btn.primary {
+  background: #ff69b4;
+  color: white;
+}
+
+.action-btn.primary:hover {
+  background: #ff1493;
+  transform: translateY(-2px);
+}
+
+.action-btn.secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.action-btn.secondary:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+}
+
+.action-btn.tertiary {
+  background: transparent;
+  color: #ff69b4;
+  border: 2px solid #ff69b4;
+}
+
+.action-btn.tertiary:hover {
+  background: #ff69b4;
+  color: white;
+}
+
+.action-btn.danger {
+  background: #dc3545;
+  color: white;
+}
+
+.action-btn.danger:hover {
+  background: #c82333;
+  transform: translateY(-2px);
+}
+
+/* Settings Styles */
+.settings-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.setting-info {
+  flex: 1;
+}
+
+.setting-info strong {
+  color: #333;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.setting-info p {
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.setting-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 15px;
+  background: #ff69b4;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.setting-btn:hover {
+  background: #ff1493;
+  transform: scale(1.05);
+}
+
+.setting-btn.disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.setting-select {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  background: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.setting-select:focus {
+  border-color: #ff69b4;
+  outline: none;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  width: 60px;
+  height: 30px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-switch label {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  border-radius: 30px;
+  transition: 0.3s;
+}
+
+.toggle-switch label:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.toggle-switch input:checked + label {
+  background-color: #ff69b4;
+}
+
+.toggle-switch input:checked + label:before {
+  transform: translateX(30px);
+}
+
+.toggle-switch input:disabled + label {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+/* Notifications */
+.notification {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  z-index: 2000;
+  animation: slideIn 0.3s ease;
+}
+
+.notification.success {
+  background: #28a745;
+}
+
+.notification.info {
+  background: #17a2b8;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Spotify Sidebar */
+.spotify-sidebar {
+  position: fixed;
+  top: 80px;
+  right: 0;
+  width: 320px;
+  height: calc(100vh - 80px);
+  background: linear-gradient(145deg, #1db954, #1ed760);
+  box-shadow: -5px 0 20px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+  border-radius: 20px 0 0 20px;
+}
+
+.spotify-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 20px 0 0 0;
+}
+
+.spotify-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+}
+
+.spotify-icon {
+  font-size: 1.5rem;
+}
+
+.spotify-logo h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.spotify-toggle {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.2rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spotify-toggle:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.spotify-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  height: calc(100% - 80px);
+}
+
+/* Now Playing Section */
+.now-playing {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 1rem;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.album-art {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.vinyl-animation {
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, #333 30%, #000 40%, #333 50%, #000 60%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.vinyl-animation::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: #333;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.music-note {
+  font-size: 2rem;
+  color: white;
+  z-index: 1;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.track-info h4 {
+  color: white;
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.track-info p {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Spotify Controls */
+.spotify-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 1rem;
+  backdrop-filter: blur(10px);
+}
+
+.control-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 0.8rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.2rem;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.control-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.control-btn.play-pause {
+  background: rgba(255, 255, 255, 0.9);
+  color: #1db954;
+  width: 60px;
+  height: 60px;
+  font-size: 1.4rem;
+}
+
+.control-btn.play-pause:hover {
+  background: white;
+  transform: scale(1.15);
+}
+
+/* Volume Control */
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 1rem;
+  backdrop-filter: blur(10px);
+}
+
+.volume-control span {
+  color: white;
+  font-size: 1.2rem;
+}
+
+.volume-slider {
+  flex: 1;
+  height: 5px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.3);
+  outline: none;
+  cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Spotify Actions */
+.spotify-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.spotify-btn {
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+}
+
+.spotify-btn.primary {
+  background: white;
+  color: #1db954;
+}
+
+.spotify-btn.primary:hover {
+  background: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.spotify-btn.secondary {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.spotify-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.spotify-btn.tertiary {
+  background: linear-gradient(135deg, #ff69b4, #d6336c);
+  color: white;
+  border: none;
+}
+
+.spotify-btn.tertiary:hover {
+  background: linear-gradient(135deg, #ff1493, #b02a50);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Playlist Section */
+.playlist-section {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 1rem;
+  backdrop-filter: blur(10px);
+}
+
+.playlist-section h4 {
+  color: white;
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.playlist-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.playlist-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+}
+
+.playlist-item:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateX(5px);
+}
+
+.playlist-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.playlist-name {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Embedded Spotify Player */
+.embedded-player {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 1rem;
+  margin-top: 1rem;
+  backdrop-filter: blur(10px);
+  position: relative;
+  animation: slideInDown 0.3s ease;
+}
+
+.embedded-player h4 {
+  color: white;
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.close-player {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.close-player:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+@keyframes slideInDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Dashboard adjustments for Spotify sidebar */
+.dashboard-main {
+  margin-right: 10px;
+  transition: margin-right 0.3s ease;
+}
+
+
+
+/* Notification updates for Spotify */
+.notification {
+  right: 340px;
+  transition: right 0.3s ease;
+}
+
+.notification.spotify-hidden {
+  right: 80px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .nav-container {
+    padding: 0 1rem;
+  }
+  
+  .nav-menu {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    text-align: center;
+  }
+  
+  .dashboard-main,
+  .profile-main,
+  .settings-main {
+    padding: 1rem;
+    margin-top: 100px;
+    margin-right: 0 !important;
+  }
+  
+  /* Spotify sidebar mobile adjustments */
+  .spotify-sidebar {
+    width: 280px;
+    top: 100px;
+  }
+  
+  .spotify-content {
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  .spotify-controls {
+    gap: 0.5rem;
+  }
+  
+  .control-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+  
+  .control-btn.play-pause {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+  
+  .notification {
+    right: 20px !important;
+    top: 120px;
+  }
+  
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .avatar-circle {
+    width: 80px;
+    height: 80px;
+    font-size: 2rem;
+  }
+  
+  .profile-info h1 {
+    font-size: 2rem;
+  }
+  
+  .dashboard-grid,
+  .profile-grid,
+  .settings-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .profile-actions,
+  .settings-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .setting-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  
+  .setting-item .toggle-switch,
+  .setting-item .setting-select,
+  .setting-item .setting-btn {
+    align-self: center;
+  }
+}

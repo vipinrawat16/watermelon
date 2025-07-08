@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🍉 Watermelon Study Hub - Study Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="icon" href="{{ url_for('static', filename='watermelon_tab_img.png') }}" type="image/png" />
+  <style>
+    /* Enhanced Dashboard Styles */
+    .enhanced-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 30px;
+      margin-top: 30px;
+      margin-bottom: 30px;
+    }
+
+    .focus-card, .study-card, .task-card, .reminder-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 25px;
+      padding: 30px;
+      color: white;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.15), 0 5px 15px rgba(255, 105, 180, 0.2);
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      min-height: 350px;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+    }
+    
+    .focus-card:hover, .study-card:hover, .task-card:hover, .reminder-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.25), 0 10px 25px rgba(255, 105, 180, 0.3);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .focus-card {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    }
+
+    .study-card {
+      background: linear-gradient(135deg, #4ecdc4 0%, #26d0ce 100%);
+    }
+
+    .task-card {
+      background: linear-gradient(135deg, #ffe66d 0%, #ff8008 100%);
+    }
+
+    .reminder-card {
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+      color: #333;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .card-title {
+      font-size: 1.5em;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .timer-display {
+      font-family: 'Courier New', monospace;
+      font-size: 2.5em;
+      font-weight: bold;
+      text-align: center;
+      margin: 25px 0;
+      background: rgba(255,255,255,0.25);
+      padding: 20px;
+      border-radius: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .control-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .control-btn {
+      background: linear-gradient(145deg, rgba(255,255,255,0.25), rgba(255,255,255,0.15));
+      border: 2px solid rgba(255,255,255,0.3);
+      padding: 12px 20px;
+      border-radius: 30px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      font-size: 1em;
+      font-weight: 600;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .control-btn:hover {
+      background: linear-gradient(145deg, rgba(255,255,255,0.35), rgba(255,255,255,0.25));
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.3);
+      border-color: rgba(255,255,255,0.5);
+    }
+
+    .control-btn:active {
+      transform: translateY(-1px) scale(1.02);
+    }
+
+    .control-btn.primary {
+      background: linear-gradient(145deg, #ff69b4, #ff1493, #d6336c);
+      border: 2px solid rgba(255,255,255,0.4);
+      font-weight: bold;
+      animation: gentle-glow 3s ease-in-out infinite;
+    }
+    
+    .control-btn.primary:hover {
+      background: linear-gradient(145deg, #ff1493, #dc143c, #b02a50);
+      transform: translateY(-5px) scale(1.08);
+      box-shadow: 0 12px 30px rgba(255, 105, 180, 0.4);
+    }
+    
+    @keyframes gentle-glow {
+      0%, 100% { box-shadow: 0 4px 15px rgba(0,0,0,0.1), 0 0 10px rgba(255, 105, 180, 0.3); }
+      50% { box-shadow: 0 4px 15px rgba(0,0,0,0.1), 0 0 20px rgba(255, 105, 180, 0.5); }
+    }
+
+    .task-list, .reminder-list {
+      max-height: 400px;
+      overflow-y: auto;
+      margin: 20px 0;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.3) transparent;
+    }
+    
+    .task-list::-webkit-scrollbar, .reminder-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .task-list::-webkit-scrollbar-track, .reminder-list::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+    }
+    
+    .task-list::-webkit-scrollbar-thumb, .reminder-list::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.3);
+      border-radius: 3px;
+    }
+
+    .task-item, .reminder-item {
+      background: rgba(255,255,255,0.15);
+      margin: 12px 0;
+      padding: 15px;
+      border-radius: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+    
+    .task-item:hover, .reminder-item:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateX(5px);
+      border-color: rgba(255,255,255,0.4);
+    }
+
+    .task-item.completed {
+      opacity: 0.6;
+      text-decoration: line-through;
+    }
+
+    .priority-high {
+      border-left: 4px solid #ff4444;
+    }
+
+    .priority-medium {
+      border-left: 4px solid #ffaa44;
+    }
+
+    .priority-low {
+      border-left: 4px solid #44ff44;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin: 10px 0;
+    }
+
+    .quick-input {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.2);
+      color: black;
+      font-size: 0.9em;
+    }
+
+    .quick-input::placeholder {
+      color: rgba(14, 13, 13, 0.7);
+    }
+
+    .quick-input:focus {
+      outline: none;
+      background: rgba(255,255,255,0.3);
+    }
+
+    .reminder-card .quick-input {
+      color: #333;
+    }
+
+    .reminder-card .quick-input::placeholder {
+      color: rgba(0,0,0,0.5);
+    }
+
+    .add-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      border-radius: 20px;
+      padding: 8px 15px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .add-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .reminder-card .add-btn {
+      color: #333;
+      background: rgba(0,0,0,0.1);
+    }
+
+    .reminder-card .add-btn:hover {
+      background: rgba(0,0,0,0.2);
+    }
+
+    .focus-active {
+      animation: pulse 2s infinite;
+    }
+
+    .focus-paused {
+      opacity: 0.8;
+      filter: grayscale(0.3);
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+      font-size: 0.9em;
+    }
+
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      border-radius: 10px;
+      color: white;
+      z-index: 1000;
+      animation: slideIn 0.3s ease;
+    }
+
+    .notification.success {
+      background: #4CAF50;
+    }
+
+    .notification.warning {
+      background: #FF9800;
+    }
+
+    .notification.info {
+      background: #2196F3;
+    }
+
+    .notification.error {
+      background: #F44336;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .reminder-time {
+      font-size: 0.8em;
+      opacity: 0.8;
+    }
+
+    .delete-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      color: white;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .delete-btn:hover {
+      background: rgba(255,0,0,0.5);
+    }
+
+    .reminder-card .delete-btn {
+      background: rgba(0,0,0,0.2);
+      color: #333;
+    }
+
+    .reminder-card .delete-btn:hover {
+      background: rgba(255,0,0,0.5);
+      color: white;
+    }
+
+    .session-type-selector {
+      display: flex;
+      gap: 5px;
+      margin: 10px 0;
+    }
+
+    .session-type-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      padding: 5px 10px;
+      border-radius: 15px;
+      color: white;
+      cursor: pointer;
+      font-size: 0.8em;
+      transition: all 0.3s ease;
+    }
+
+    .session-type-btn.active {
+      background: rgba(255,255,255,0.4);
+      font-weight: bold;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .enhanced-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .timer-display {
+        font-size: 1.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+   <div class="cursor" id="cursor"></div>
+   
+   <!-- Navigation Header -->
+   <header class="navbar">
+     <div class="nav-container">
+       <div class="nav-brand">
+         <h1>🍉 Watermelon Study Hub</h1>
+       </div>
+       <nav class="nav-menu">
+         <a href="/dashboard" class="nav-link">Dashboard</a>
+         <a href="#" class="nav-link active">Study Mode</a>
+         <a href="/profile" class="nav-link">Profile</a>
+         <a href="/settings" class="nav-link">Settings</a>
+        <button class="copilot-btn" onclick="openCopilot()" title="Open Microsoft 365 Copilot">
+          <span class="copilot-icon">🤖</span>
+          <span class="copilot-text">Copilot</span>
+        </button>
+        <button class="spotify-nav-btn" onclick="openSpotifyApp()" title="Open Spotify">
+          <span class="spotify-nav-icon">🎵</span>
+          <span class="spotify-nav-text">Spotify</span>
+        </button>
+        <a href="/logout" class="nav-link logout">Logout</a>
+       </nav>
+     </div>
+   </header>
+
+   <!-- Main Dashboard Content -->
+   <main class="dashboard-main">
+     <div class="dashboard-container">
+       
+       <!-- Welcome Section -->
+       <section class="welcome-section">
+         <h2>Enhanced Study Dashboard, {{ username }}! 🎯</h2>
+         <p>Focus • Study • Track • Achieve</p>
+       </section>
+
+       <!-- Enhanced Features Grid -->
+       <section class="enhanced-grid">
+         
+         <!-- Focus Mode Card -->
+         <div class="focus-card" id="focusModeCard">
+           <div class="card-header">
+             <div class="card-title">
+               🎯 Focus Mode
+             </div>
+           </div>
+           
+           <div class="timer-display" id="timerDisplay">00:00:00</div>
+           
+           <div class="session-type-selector">
+             <button class="session-type-btn active" onclick="selectSessionType('focus')">🎯 Focus</button>
+             <button class="session-type-btn" onclick="selectSessionType('study')">📚 Study</button>
+             <button class="session-type-btn" onclick="selectSessionType('break')">☕ Break</button>
+           </div>
+           
+           <div class="control-buttons">
+             <button class="control-btn primary" id="startFocusBtn" onclick="startFocusMode()">Start Focus</button>
+             <button class="control-btn" id="pauseFocusBtn" onclick="pauseFocusMode()" style="display: none;">⏸️ Pause</button>
+             <button class="control-btn" id="stopFocusBtn" onclick="stopFocusMode()" style="display: none;">⏹️ Stop</button>
+           </div>
+           
+           <div class="stats-row">
+             <span>Today: <span id="todayStudyTime">0h 0m</span></span>
+             <span>Total: <span id="totalStudyTime">0h 0m</span></span>
+           </div>
+         </div>
+
+         <!-- Task Notepad Card -->
+         <div class="task-card">
+           <div class="card-header">
+             <div class="card-title">
+               📝 Task Notepad
+             </div>
+           </div>
+           
+           <div class="input-group">
+             <input type="text" class="quick-input" id="taskInput" placeholder="Add a new task..." />
+             <select class="quick-input" id="taskPriority" style="flex: 0.3;">
+               <option value="low">Low</option>
+               <option value="medium" selected>Medium</option>
+               <option value="high">High</option>
+             </select>
+             <button class="add-btn" onclick="addTask()">+</button>
+           </div>
+           
+           <div class="task-list" id="taskList">
+             <!-- Tasks will be loaded here -->
+           </div>
+           
+           <div class="stats-row">
+             <span>Pending: <span id="pendingTasks">0</span></span>
+             <span>Completed: <span id="completedTasks">0</span></span>
+           </div>
+         </div>
+
+         <!-- Reminder System Card -->
+         <div class="reminder-card">
+           <div class="card-header">
+             <div class="card-title">
+               ⏰ Smart Reminders
+             </div>
+           </div>
+           
+           <div class="input-group">
+             <input type="text" class="quick-input" id="reminderTitle" placeholder="Reminder title..." />
+             <input type="datetime-local" class="quick-input" id="reminderTime" style="flex: 0.7;" />
+             <button class="add-btn" onclick="addReminder()">+</button>
+           </div>
+           
+           <div class="reminder-list" id="reminderList">
+             <!-- Reminders will be loaded here -->
+           </div>
+           
+           <div class="control-buttons">
+             <button class="control-btn" onclick="setQuickReminder(15)" style="background: rgba(0,0,0,0.1); color: #333;">15m</button>
+             <button class="control-btn" onclick="setQuickReminder(30)" style="background: rgba(0,0,0,0.1); color: #333;">30m</button>
+             <button class="control-btn" onclick="setQuickReminder(60)" style="background: rgba(0,0,0,0.1); color: #333;">1h</button>
+           </div>
+         </div>
+
+         <!-- Study Analytics Card -->
+         <div class="study-card">
+           <div class="card-header">
+             <div class="card-title">
+               📊 Study Analytics
+             </div>
+           </div>
+           
+           <div class="stats-row">
+             <span>Streak: {{ data.streak_count }} days</span>
+             <span>Sessions: <span id="sessionCount">0</span></span>
+           </div>
+           
+           <div class="stats-row">
+             <span>Avg Session: <span id="avgSession">0m</span></span>
+             <span>Quiz Accuracy: {{ data.accuracy }}%</span>
+           </div>
+           
+           <div class="control-buttons">
+             <button class="control-btn" onclick="viewDetailedStats()">📈 Details</button>
+             <button class="control-btn" onclick="exportData()">📥 Export</button>
+           </div>
+           
+           <div id="recentSessions">
+             <!-- Recent sessions will be loaded here -->
+           </div>
+         </div>
+
+       </section>
+
+       <!-- Quick Actions -->
+       <section class="dashboard-grid" style="margin-top: 30px;">
+         <!-- Original dashboard cards for navigation -->
+         <div class="dashboard-card">
+           <div class="card-icon">📝</div>
+           <div class="card-content">
+             <h3>Study Notes</h3>
+             <p>{{ data.total_notes }} notes available</p>
+             <div style="display: flex; gap: 5px;">
+               <a href="/notes/add" class="card-button" style="flex: 1;">Add</a>
+               <a href="/notes/view" class="card-button" style="flex: 1; background: #28a745;">View</a>
+             </div>
+           </div>
+         </div>
+
+         <div class="dashboard-card">
+           <div class="card-icon">🧠</div>
+           <div class="card-content">
+             <h3>Smart Quiz</h3>
+             <p>Test your knowledge</p>
+            <a href="https://www.insightsonindia.com/upsc-daily-static-quiz/" target="_blank" class="card-button">Take Quiz</a>
+           </div>
+         </div>
+
+         <div class="dashboard-card">
+           <div class="card-icon">📅</div>
+           <div class="card-content">
+             <h3>Schedule</h3>
+             <p>Manage time slots</p>
+             <a href="/time-slots" class="card-button">Schedule</a>
+           </div>
+         </div>
+       </section>
+
+     </div>
+   </main>
+
+   <script>
+    // Global variables
+    let currentSessionType = 'focus';
+    let focusTimer = null;
+    let focusStartTime = null;
+    let focusElapsedTime = 0;
+    let isFocusActive = false;
+    let isFocusPaused = false;
+    let tasks = [];
+    let reminders = [];
+    let focusSessions = [];
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      loadTasks();
+      loadReminders();
+      loadFocusSessions();
+      updateStudyStats();
+      setInterval(checkReminders, 60000); // Check reminders every minute
+      
+      // Initialize reminder time to current time + 15 minutes
+      const now = new Date();
+      now.setMinutes(now.getMinutes() + 15);
+      document.getElementById('reminderTime').value = now.toISOString().slice(0, 16);
+    });
+
+    // Session Type Selection
+    function selectSessionType(type) {
+      currentSessionType = type;
+      document.querySelectorAll('.session-type-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      // Update card appearance based on session type
+      const card = document.getElementById('focusModeCard');
+      card.className = 'focus-card';
+      if (type === 'study') {
+        card.style.background = 'linear-gradient(135deg, #4ecdc4 0%, #26d0ce 100%)';
+      } else if (type === 'break') {
+        card.style.background = 'linear-gradient(135deg, #ffe66d 0%, #ff8008 100%)';
+      } else {
+        card.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)';
+      }
+    }
+
+    // Focus Mode Functions
+    function startFocusMode() {
+      if (isFocusPaused) {
+        focusStartTime = Date.now() - focusElapsedTime;
+        isFocusPaused = false;
+      } else {
+        focusStartTime = Date.now();
+        focusElapsedTime = 0;
+      }
+      
+      isFocusActive = true;
+      
+      // Update UI
+      document.getElementById('startFocusBtn').style.display = 'none';
+      document.getElementById('pauseFocusBtn').style.display = 'inline-block';
+      document.getElementById('stopFocusBtn').style.display = 'inline-block';
+      
+      const focusCard = document.getElementById('focusModeCard');
+      focusCard.classList.add('focus-active');
+      focusCard.classList.remove('focus-paused');
+      
+      // Start timer
+      focusTimer = setInterval(updateFocusTimer, 1000);
+      
+      showNotification(`🍉 ${currentSessionType.charAt(0).toUpperCase() + currentSessionType.slice(1)} Mode Started!`, 'success');
+    }
+
+    function pauseFocusMode() {
+      if (!isFocusActive) return;
+      
+      isFocusPaused = true;
+      clearInterval(focusTimer);
+      
+      // Update UI
+      document.getElementById('startFocusBtn').style.display = 'inline-block';
+      document.getElementById('startFocusBtn').textContent = '▶️ Resume';
+      document.getElementById('pauseFocusBtn').style.display = 'none';
+      
+      const focusCard = document.getElementById('focusModeCard');
+      focusCard.classList.remove('focus-active');
+      focusCard.classList.add('focus-paused');
+      
+      showNotification('⏸️ Session paused. Take a moment!', 'info');
+    }
+
+    function stopFocusMode() {
+      if (!isFocusActive && !isFocusPaused) return;
+      
+      const sessionTime = Math.floor(focusElapsedTime / 1000);
+      
+      // Save session to backend
+      saveFocusSession(sessionTime);
+      
+      // Reset everything
+      isFocusActive = false;
+      isFocusPaused = false;
+      focusElapsedTime = 0;
+      clearInterval(focusTimer);
+      
+      // Update UI
+      document.getElementById('startFocusBtn').style.display = 'inline-block';
+      document.getElementById('startFocusBtn').textContent = '🍉 Start ' + currentSessionType.charAt(0).toUpperCase() + currentSessionType.slice(1);
+      document.getElementById('pauseFocusBtn').style.display = 'none';
+      document.getElementById('stopFocusBtn').style.display = 'none';
+      document.getElementById('timerDisplay').textContent = '00:00:00';
+      
+      const focusCard = document.getElementById('focusModeCard');
+      focusCard.classList.remove('focus-active', 'focus-paused');
+      
+      updateStudyStats();
+      
+      const hours = Math.floor(sessionTime / 3600);
+      const minutes = Math.floor((sessionTime % 3600) / 60);
+      const timeStr = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+      
+      showNotification(`🎉 Great session! You focused for ${timeStr}`, 'success');
+    }
+
+    function updateFocusTimer() {
+      if (!isFocusActive || isFocusPaused) return;
+      
+      focusElapsedTime = Date.now() - focusStartTime;
+      const totalSeconds = Math.floor(focusElapsedTime / 1000);
+      
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      
+      const display = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      document.getElementById('timerDisplay').textContent = display;
+    }
+
+    // Task Management Functions
+    async function loadTasks() {
+      try {
+        const response = await fetch('/api/tasks');
+        tasks = await response.json();
+        displayTasks();
+        updateTaskStats();
+      } catch (error) {
+        console.error('Error loading tasks:', error);
+      }
+    }
+
+    function displayTasks() {
+      const taskList = document.getElementById('taskList');
+      taskList.innerHTML = '';
+      
+      tasks.forEach(task => {
+        const taskItem = document.createElement('div');
+        taskItem.className = `task-item priority-${task.priority} ${task.is_completed ? 'completed' : ''}`;
+        
+        const dueDate = task.due_date ? new Date(task.due_date).toLocaleDateString() : '';
+        
+        taskItem.innerHTML = `
+          <div>
+            <div style="font-weight: bold;">${task.title}</div>
+            <div style="font-size: 0.8em; opacity: 0.8;">${task.description}</div>
+            ${dueDate ? `<div style="font-size: 0.7em; color: #ff6b6b;">Due: ${dueDate}</div>` : ''}
+          </div>
+          <div style="display: flex; gap: 5px; align-items: center;">
+            <input type="checkbox" ${task.is_completed ? 'checked' : ''} 
+                   onchange="toggleTask(${task.id})" style="cursor: pointer;">
+            <button class="delete-btn" onclick="deleteTask(${task.id})">×</button>
+          </div>
+        `;
+        
+        taskList.appendChild(taskItem);
+      });
+    }
+
+    async function addTask() {
+      const titleInput = document.getElementById('taskInput');
+      const prioritySelect = document.getElementById('taskPriority');
+      
+      const title = titleInput.value.trim();
+      if (!title) return;
+      
+      try {
+        const response = await fetch('/api/tasks', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: title,
+            priority: prioritySelect.value,
+            category: 'study'
+          })
+        });
+        
+        if (response.ok) {
+          titleInput.value = '';
+          loadTasks();
+          showNotification('✅ Task added successfully!', 'success');
+        }
+      } catch (error) {
+        console.error('Error adding task:', error);
+        showNotification('❌ Failed to add task', 'error');
+      }
+    }
+
+    async function toggleTask(taskId) {
+      const task = tasks.find(t => t.id === taskId);
+      if (!task) return;
+      
+      try {
+        const response = await fetch(`/api/tasks/${taskId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...task,
+            is_completed: !task.is_completed
+          })
+        });
+        
+        if (response.ok) {
+          loadTasks();
+          showNotification(task.is_completed ? '📋 Task marked incomplete' : '✅ Task completed!', 'success');
+        }
+      } catch (error) {
+        console.error('Error updating task:', error);
+      }
+    }
+
+    async function deleteTask(taskId) {
+      if (!confirm('Delete this task?')) return;
+      
+      try {
+        const response = await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' });
+        if (response.ok) {
+          loadTasks();
+          showNotification('🗑️ Task deleted', 'info');
+        }
+      } catch (error) {
+        console.error('Error deleting task:', error);
+      }
+    }
+
+    function updateTaskStats() {
+      const pending = tasks.filter(t => !t.is_completed).length;
+      const completed = tasks.filter(t => t.is_completed).length;
+      
+      document.getElementById('pendingTasks').textContent = pending;
+      document.getElementById('completedTasks').textContent = completed;
+    }
+
+    // Reminder Functions
+    async function loadReminders() {
+      try {
+        const response = await fetch('/api/reminders');
+        reminders = await response.json();
+        displayReminders();
+      } catch (error) {
+        console.error('Error loading reminders:', error);
+      }
+    }
+
+    function displayReminders() {
+      const reminderList = document.getElementById('reminderList');
+      reminderList.innerHTML = '';
+      
+      const activeReminders = reminders.filter(r => r.is_active && new Date(r.reminder_time) > new Date());
+      
+      activeReminders.slice(0, 5).forEach(reminder => {
+        const reminderItem = document.createElement('div');
+        reminderItem.className = 'reminder-item';
+        
+        const reminderTime = new Date(reminder.reminder_time);
+        const timeStr = reminderTime.toLocaleString();
+        
+        reminderItem.innerHTML = `
+          <div>
+            <div style="font-weight: bold;">${reminder.title}</div>
+            <div class="reminder-time">${timeStr}</div>
+          </div>
+          <button class="delete-btn" onclick="deleteReminder(${reminder.id})">×</button>
+        `;
+        
+        reminderList.appendChild(reminderItem);
+      });
+      
+      if (activeReminders.length === 0) {
+        reminderList.innerHTML = '<div style="text-align: center; opacity: 0.7;">No upcoming reminders</div>';
+      }
+    }
+
+    async function addReminder() {
+      const titleInput = document.getElementById('reminderTitle');
+      const timeInput = document.getElementById('reminderTime');
+      
+      const title = titleInput.value.trim();
+      const time = timeInput.value;
+      
+      if (!title || !time) {
+        showNotification('⚠️ Please enter title and time', 'warning');
+        return;
+      }
+      
+      try {
+        const response = await fetch('/api/reminders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: title,
+            reminder_time: new Date(time).toISOString(),
+            reminder_type: 'study'
+          })
+        });
+        
+        if (response.ok) {
+          titleInput.value = '';
+          // Reset to 15 minutes from now
+          const now = new Date();
+          now.setMinutes(now.getMinutes() + 15);
+          timeInput.value = now.toISOString().slice(0, 16);
+          
+          loadReminders();
+          showNotification('⏰ Reminder set successfully!', 'success');
+        }
+      } catch (error) {
+        console.error('Error adding reminder:', error);
+        showNotification('❌ Failed to add reminder', 'error');
+      }
+    }
+
+    function setQuickReminder(minutes) {
+      const now = new Date();
+      now.setMinutes(now.getMinutes() + minutes);
+      
+      const title = `Study break in ${minutes} minutes`;
+      
+      fetch('/api/reminders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: title,
+          reminder_time: now.toISOString(),
+          reminder_type: 'break'
+        })
+      }).then(response => {
+        if (response.ok) {
+          loadReminders();
+          showNotification(`⏰ ${title} reminder set!`, 'success');
+        }
+      });
+    }
+
+    async function deleteReminder(reminderId) {
+      try {
+        const response = await fetch(`/api/reminders/${reminderId}`, { method: 'DELETE' });
+        if (response.ok) {
+          loadReminders();
+          showNotification('🔕 Reminder cancelled', 'info');
+        }
+      } catch (error) {
+        console.error('Error deleting reminder:', error);
+      }
+    }
+
+    function checkReminders() {
+      const now = new Date();
+      reminders.forEach(reminder => {
+        if (reminder.is_active && new Date(reminder.reminder_time) <= now) {
+          showNotification(`🔔 ${reminder.title}`, 'warning');
+          // Optionally play a sound or show a more prominent notification
+          if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification(reminder.title, {
+              body: reminder.message || 'Study reminder',
+              icon: '/static/watermelon_tab_img.png'
+            });
+          }
+        }
+      });
+    }
+
+    // Focus Session Management
+    async function saveFocusSession(duration) {
+      const startTime = new Date(Date.now() - focusElapsedTime);
+      const endTime = new Date();
+      
+      try {
+        await fetch('/api/focus-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            session_type: currentSessionType,
+            duration: duration,
+            start_time: startTime.toISOString(),
+            end_time: endTime.toISOString(),
+            subject: currentSessionType === 'study' ? 'General Study' : currentSessionType
+          })
+        });
+        
+        loadFocusSessions();
+      } catch (error) {
+        console.error('Error saving focus session:', error);
+      }
+    }
+
+    async function loadFocusSessions() {
+      try {
+        const response = await fetch('/api/focus-sessions');
+        focusSessions = await response.json();
+        updateSessionStats();
+      } catch (error) {
+        console.error('Error loading focus sessions:', error);
+      }
+    }
+
+    function updateSessionStats() {
+      const sessionCount = focusSessions.length;
+      const totalDuration = focusSessions.reduce((sum, session) => sum + session.duration, 0);
+      const avgDuration = sessionCount > 0 ? Math.floor(totalDuration / sessionCount / 60) : 0;
+      
+      document.getElementById('sessionCount').textContent = sessionCount;
+      document.getElementById('avgSession').textContent = `${avgDuration}m`;
+      
+      // Display recent sessions
+      const recentSessions = document.getElementById('recentSessions');
+      recentSessions.innerHTML = '';
+      
+      focusSessions.slice(0, 3).forEach(session => {
+        const sessionDiv = document.createElement('div');
+        sessionDiv.style.cssText = 'font-size: 0.8em; margin: 5px 0; opacity: 0.8;';
+        const duration = Math.floor(session.duration / 60);
+        sessionDiv.textContent = `${session.session_type}: ${duration}m`;
+        recentSessions.appendChild(sessionDiv);
+      });
+    }
+
+    function updateStudyStats() {
+      // This would integrate with your existing study statistics
+      updateTaskStats();
+      updateSessionStats();
+    }
+
+    // Utility Functions
+    function showNotification(message, type = 'info') {
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
+    }
+
+    function viewDetailedStats() {
+      window.location.href = '/statistics';
+    }
+
+    function exportData() {
+      const data = {
+        tasks: tasks,
+        reminders: reminders,
+        sessions: focusSessions,
+        exportDate: new Date().toISOString()
+      };
+      
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `watermelon-study-data-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      showNotification('📥 Data exported successfully!', 'success');
+    }
+
+    // Copilot and Spotify functions
+    function openCopilot() {
+      showNotification('🤖 Opening Microsoft 365 Copilot...', 'success');
+      window.open('https://copilot.microsoft.com/', '_blank');
+    }
+
+    function openSpotifyApp() {
+      showNotification('🎵 Opening Spotify...', 'success');
+      window.open('https://open.spotify.com/', '_blank');
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey || e.metaKey) {
+        switch(e.key) {
+          case 'f': // Ctrl+F for focus mode
+            e.preventDefault();
+            if (isFocusActive) {
+              pauseFocusMode();
+            } else {
+              startFocusMode();
+            }
+            break;
+          case 't': // Ctrl+T for new task
+            e.preventDefault();
+            document.getElementById('taskInput').focus();
+            break;
+          case 'r': // Ctrl+R for new reminder
+            e.preventDefault();
+            document.getElementById('reminderTitle').focus();
+            break;
+        }
+      }
+    });
+
+    // Request notification permission
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+
+    // Cursor effect
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+
+    // Add sparkle effect on click
+    document.addEventListener('click', (e) => {
+      createSparkle(e.clientX, e.clientY);
+    });
+
+    function createSparkle(x, y) {
+      const sparkles = ['✨', '⭐', '💖', '🌟', '💫'];
+      const sparkle = document.createElement('div');
+      sparkle.className = 'sparkle';
+      sparkle.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+      sparkle.style.cssText = `
+        position: fixed;
+        left: ${x - 10}px;
+        top: ${y - 10}px;
+        font-size: 20px;
+        pointer-events: none;
+        z-index: 1000;
+        animation: sparkleFloat 1s ease-out forwards;
+      `;
+      document.body.appendChild(sparkle);
+      
+      setTimeout(() => {
+        sparkle.remove();
+      }, 1000);
+    }
+
+    // Add sparkle animation CSS
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes sparkleFloat {
+        0% { transform: translateY(0) scale(1); opacity: 1; }
+        100% { transform: translateY(-50px) scale(0.5); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+   </script>
+</body>
+</html>

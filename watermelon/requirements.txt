@@ -1,0 +1,11 @@
+Flask
+Flask-SQLAlchemy
+Werkzeug
+requests
+Pillow
+pytesseract
+PyPDF2
+openai
+spotipy
+pygame
+gunicorn

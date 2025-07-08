@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🍉 Watermelon Study Hub - Log Study Session</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="icon" href="{{ url_for('static', filename='watermelon_tab_img.png') }}" type="image/png" />
+  <style>
+    .log-form {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 30px;
+      margin: 20px 0;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .form-group {
+      margin: 20px 0;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #333;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .time-inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    
+    @media (max-width: 768px) {
+      .time-inputs {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+   <div class="cursor" id="cursor"></div>
+   
+   <!-- Navigation Header -->
+   <header class="navbar">
+     <div class="nav-container">
+       <div class="nav-brand">
+         <h1>🍉 Watermelon Study Hub</h1>
+       </div>
+       <nav class="nav-menu">
+         <a href="/dashboard" class="nav-link">Dashboard</a>
+         <a href="/study-dashboard" class="nav-link">Study Mode</a>
+         <a href="/profile" class="nav-link">Profile</a>
+         <a href="/settings" class="nav-link">Settings</a>
+         <a href="/logout" class="nav-link logout">Logout</a>
+       </nav>
+     </div>
+   </header>
+
+   <!-- Main Content -->
+   <main class="dashboard-main">
+     <div class="dashboard-container">
+       
+       <!-- Welcome Section -->
+       <section class="welcome-section">
+         <h2>📝 Log Study Session</h2>
+         <p>Record your completed study session</p>
+       </section>
+
+       <!-- Study Session Form -->
+       <section class="log-form">
+         <h3>📚 Study Session Details</h3>
+         <form method="POST">
+           <div class="form-group">
+             <label for="subject">Subject:</label>
+             <select id="subject" name="subject" class="form-control" required>
+               <option value="">Select Subject</option>
+               {% for subject in subjects %}
+                 <option value="{{ subject.name }}">{{ subject.name }}</option>
+               {% endfor %}
+             </select>
+           </div>
+           
+           <div class="form-group">
+             <label for="topic">Topic (Optional):</label>
+             <input type="text" id="topic" name="topic" class="form-control" placeholder="e.g., Ancient India, Polity, etc.">
+           </div>
+           
+           <div class="form-group">
+             <label for="activity_type">Activity Type:</label>
+             <select id="activity_type" name="activity_type" class="form-control" required>
+               <option value="study">Study</option>
+               <option value="notes">Notes Review</option>
+               <option value="quiz">Quiz Practice</option>
+               <option value="research">Research</option>
+               <option value="revision">Revision</option>
+             </select>
+           </div>
+           
+           <div class="time-inputs">
+             <div class="form-group">
+               <label for="start_time">Start Time:</label>
+               <input type="datetime-local" id="start_time" name="start_time" class="form-control" required>
+             </div>
+             
+             <div class="form-group">
+               <label for="end_time">End Time:</label>
+               <input type="datetime-local" id="end_time" name="end_time" class="form-control" required>
+             </div>
+           </div>
+           
+           <button type="submit" class="btn-primary">📝 Log Study Session</button>
+         </form>
+       </section>
+
+       <!-- Quick Actions -->
+       <section class="dashboard-grid" style="margin-top: 30px;">
+         <div class="dashboard-card">
+           <div class="card-icon">🎯</div>
+           <div class="card-content">
+             <h3>Study Mode</h3>
+             <p>Focus timer and real-time tracking</p>
+             <a href="/study-dashboard" class="card-button">Enter Study Mode</a>
+           </div>
+         </div>
+
+         <div class="dashboard-card">
+           <div class="card-icon">📊</div>
+           <div class="card-content">
+             <h3>Statistics</h3>
+             <p>View your study progress</p>
+             <a href="/statistics" class="card-button">View Stats</a>
+           </div>
+         </div>
+
+         <div class="dashboard-card">
+           <div class="card-icon">📅</div>
+           <div class="card-content">
+             <h3>Schedule</h3>
+             <p>Plan your study sessions</p>
+             <a href="/time-slots" class="card-button">Schedule</a>
+           </div>
+         </div>
+       </section>
+
+     </div>
+   </main>
+
+   <script>
+    // Set default times (1 hour ago to now)
+    document.addEventListener('DOMContentLoaded', function() {
+      const now = new Date();
+      const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+      
+      document.getElementById('end_time').value = now.toISOString().slice(0, 16);
+      document.getElementById('start_time').value = oneHourAgo.toISOString().slice(0, 16);
+    });
+
+    // Cursor effect
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+
+    // Add sparkle effect on click
+    document.addEventListener('click', (e) => {
+      createSparkle(e.clientX, e.clientY);
+    });
+
+    function createSparkle(x, y) {
+      const sparkles = ['✨', '⭐', '💖', '🌟', '💫'];
+      const sparkle = document.createElement('div');
+      sparkle.className = 'sparkle';
+      sparkle.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+      sparkle.style.cssText = `
+        position: fixed;
+        left: ${x - 10}px;
+        top: ${y - 10}px;
+        font-size: 20px;
+        pointer-events: none;
+        z-index: 1000;
+        animation: sparkleFloat 1s ease-out forwards;
+      `;
+      document.body.appendChild(sparkle);
+      
+      setTimeout(() => {
+        sparkle.remove();
+      }, 1000);
+    }
+
+    // Add sparkle animation CSS
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes sparkleFloat {
+        0% { transform: translateY(0) scale(1); opacity: 1; }
+        100% { transform: translateY(-50px) scale(0.5); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+   </script>
+</body>
+</html>

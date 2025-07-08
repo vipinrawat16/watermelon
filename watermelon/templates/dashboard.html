@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Watermelon Study Hub - Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="icon" href="{{ url_for('static', filename='watermelon_tab_img.png') }}" type="image/png" />
+</head>
+<body>
+   <div class="cursor" id="cursor"></div>
+   
+   <!-- Navigation Header -->
+   <header class="navbar">
+     <div class="nav-container">
+       <div class="nav-brand">
+         <h1>🍉 Watermelon Study Hub</h1>
+       </div>
+       <nav class="nav-menu">
+        <a href="/dashboard" class="nav-link active">Dashboard</a>
+        <a href="/study-dashboard" class="nav-link">Study Mode</a>
+        <a href="/profile" class="nav-link">Profile</a>
+        <a href="/settings" class="nav-link">Settings</a>
+        <button class="copilot-btn" onclick="openCopilot()" title="Open Microsoft 365 Copilot">
+          <span class="copilot-icon">🤖</span>
+          <span class="copilot-text">Copilot</span>
+        </button>
+        <button class="spotify-nav-btn" onclick="openSpotifyApp()" title="Open Spotify">
+          <span class="spotify-nav-icon">🎵</span>
+          <span class="spotify-nav-text">Spotify</span>
+        </button>
+        <a href="/logout" class="nav-link logout">Logout</a>
+       </nav>
+     </div>
+   </header>
+
+
+   <!-- Main Dashboard Content -->
+   <main class="dashboard-main">
+     <div class="dashboard-container">
+       
+       <!-- Welcome Section -->
+       <section class="welcome-section">
+         <h2>Welcome back, {{ username }}! 🎉</h2>
+         <p>Here's your personalized dashboard</p>
+       </section>
+
+       <!-- Dashboard Cards -->
+       <section class="dashboard-grid">
+         
+         <!-- User Stats Card -->
+         <div class="dashboard-card">
+           <div class="card-icon">👤</div>
+           <div class="card-content">
+             <h3>Your Profile</h3>
+             <p>User ID: #{{ data.user_id }}</p>
+             <p>Member since: {{ data.member_since }}</p>
+             <a href="/profile" class="card-button">View Profile</a>
+           </div>
+         </div>
+
+         <!-- System Stats Card -->
+         <div class="dashboard-card">
+           <div class="card-icon">📊</div>
+           <div class="card-content">
+             <h3>System Stats</h3>
+             <p>Total Users: {{ data.total_users }}</p>
+             <p>Login Status: {{ data.login_count }}</p>
+             <a href="#" class="card-button">View Stats</a>
+           </div>
+         </div>
+
+         <!-- Study Notes Card -->
+         <div class="dashboard-card">
+           <div class="card-icon">📝</div>
+           <div class="card-content">
+             <h3>Study Notes</h3>
+             <p>Total Notes: {{ data.total_notes }}</p>
+             <p>Add notes with OCR scanning</p>
+             <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+               <a href="/notes/add" class="card-button" style="flex: 1; min-width: 50px; ">Add</a>
+               <a href="/notes/view" class="card-button" style="flex: 1; min-width: 50px; background: #28a745;">View</a>
+             </div>
+           </div>
+         </div>
+
+         <!-- Quiz System Card -->
+         <div class="dashboard-card">
+           <div class="card-icon">🧠</div>
+           <div class="card-content">
+             <h3>Smart Quiz</h3>
+             <p>Test your knowledge</p>
+             <a href="https://www.insightsonindia.com/upsc-daily-static-quiz/" target="_blank" class="card-button">Take Quiz</a>
+           </div>
+         </div>
+
+         <!-- Study Stats Card -->
+         <div class="dashboard-card">
+           <div class="card-icon">📊</div>
+           <div class="card-content">
+             <h3>Study Statistics</h3>
+             <p>Streak: {{ data.streak_count }} days</p>
+             <p>Study Time: {{ data.total_study_time }} min</p>
+             <a href="/statistics" class="card-button">View Stats</a>
+           </div>
+         </div>
+
+        <!-- Study Mode Card -->
+        <div class="dashboard-card">
+          <div class="card-icon">🎯</div>
+          <div class="card-content">
+            <h3>Study Mode</h3>
+            <p>Focus Timer • Task Notepad</p>
+            <p>Smart Reminders • Analytics</p>
+            <a href="/study-dashboard" class="card-button">Enter Study Mode</a>
+          </div>
+        </div>
+
+        <!-- Diary Card -->
+        <div class="dashboard-card">
+          <div class="card-icon">📖</div>
+          <div class="card-content">
+            <h3>Daily Diary</h3>
+            <p>Write your thoughts</p>
+            <p>Daily reflections & memories</p>
+            <a href="/diary" class="card-button">Open Diary</a>
+          </div>
+        </div>
+
+        <!-- Quick Actions Card -->
+        <div class="dashboard-card">
+          <div class="card-icon">⚙️</div>
+          <div class="card-content">
+            <h3>Quick Actions</h3>
+            <p>Manage your account</p>
+            <p>Update preferences</p>
+            <a href="/settings" class="card-button">Settings</a>
+          </div>
+        </div>
+
+      </section>
+
+
+     </div>
+   </main>
+
+   <script>
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+
+    // Add sparkle effect on click
+    document.addEventListener('click', (e) => {
+      createSparkle(e.clientX, e.clientY);
+    });
+
+    function createSparkle(x, y) {
+      const sparkles = ['✨', '⭐', '💖', '🌟', '💫'];
+      const sparkle = document.createElement('div');
+      sparkle.className = 'sparkle';
+      sparkle.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+      sparkle.style.left = (x - 10) + 'px';
+      sparkle.style.top = (y - 10) + 'px';
+      document.body.appendChild(sparkle);
+      
+      setTimeout(() => {
+        sparkle.remove();
+      }, 1000);
+    }
+
+     // Add some interactivity
+     document.querySelectorAll('.dashboard-card').forEach(card => {
+       card.addEventListener('mouseenter', () => {
+         card.style.transform = 'translateY(-5px)';
+       });
+       card.addEventListener('mouseleave', () => {
+         card.style.transform = 'translateY(0)';
+       });
+     });
+
+     // Real Spotify API Integration
+     let isSpotifyOpen = true;
+     let isPlaying = false;
+     let currentVolume = 50;
+     let isSpotifyConnected = false;
+     let userPlaylists = [];
+     let currentPlaylistIndex = 0;
+
+     function toggleSpotify() {
+       const sidebar = document.getElementById('spotifySidebar');
+       const toggleIcon = document.getElementById('toggleIcon');
+       
+       if (isSpotifyOpen) {
+         sidebar.style.transform = 'translateX(calc(100% - 60px))';
+         toggleIcon.textContent = '▶';
+         isSpotifyOpen = false;
+       } else {
+         sidebar.style.transform = 'translateX(0)';
+         toggleIcon.textContent = '◀';
+         isSpotifyOpen = true;
+       }
+     }
+
+     // Connect to real Spotify account
+     function connectToSpotify() {
+       showNotification('🔗 Redirecting to Spotify...', 'info');
+       window.location.href = '/spotify/login';
+     }
+
+     // Load user's real Spotify playlists
+     async function loadUserPlaylists() {
+       try {
+         const response = await fetch('/api/spotify/playlists');
+         const data = await response.json();
+         
+         if (data.error) {
+           showNotification('⚠️ ' + data.error, 'warning');
+           return;
+         }
+         
+         userPlaylists = data.items;
+         displayUserPlaylists();
+         
+         // Update UI to show connected state
+         document.getElementById('spotifyConnectBtn').innerHTML = '<span>✓</span> Connected';
+         document.getElementById('spotifyConnectBtn').style.background = '#1db954';
+         document.getElementById('playPlaylistBtn').style.display = 'block';
+         document.getElementById('userPlaylists').style.display = 'block';
+         
+         isSpotifyConnected = true;
+         showNotification('🎵 Loaded your Spotify playlists!', 'success');
+         
+       } catch (error) {
+         console.error('Error loading playlists:', error);
+         showNotification('⚠️ Failed to load playlists', 'warning');
+       }
+     }
+
+     // Display user playlists in the sidebar
+     function displayUserPlaylists() {
+       const playlistContainer = document.getElementById('spotifyPlaylistList');
+       playlistContainer.innerHTML = '';
+       
+       userPlaylists.slice(0, 6).forEach((playlist, index) => {
+         const playlistItem = document.createElement('div');
+         playlistItem.className = 'playlist-item';
+         playlistItem.innerHTML = `
+           <span class="playlist-icon">🎵</span>
+           <span class="playlist-name">${playlist.name}</span>
+           <span class="track-count">${playlist.tracks.total} tracks</span>
+         `;
+         playlistItem.onclick = () => playSpotifyPlaylist(playlist.uri, playlist.name);
+         playlistContainer.appendChild(playlistItem);
+       });
+     }
+
+
+     // Play specific Spotify playlist
+     async function playSpotifyPlaylist(playlistUri, playlistName) {
+       try {
+         const response = await fetch('/api/spotify/play', {
+           method: 'POST',
+           headers: {'Content-Type': 'application/json'},
+           body: JSON.stringify({playlist_uri: playlistUri})
+         });
+         
+         const data = await response.json();
+         
+         if (data.success) {
+           updateCurrentTrack(playlistName, 'Your Playlist');
+           if (!isPlaying) togglePlayPauseUI();
+           showNotification(`🎵 Playing: ${playlistName}`, 'success');
+           
+           // Start getting current track info
+           getCurrentTrack();
+         } else {
+           showNotification('⚠️ ' + (data.error || 'Failed to play playlist'), 'warning');
+         }
+       } catch (error) {
+         console.error('Error playing playlist:', error);
+         showNotification('⚠️ Failed to play playlist', 'warning');
+       }
+     }
+
+     // Play first playlist (quick play)
+     async function playMyPlaylist() {
+       if (userPlaylists.length > 0) {
+         const firstPlaylist = userPlaylists[0];
+         await playSpotifyPlaylist(firstPlaylist.uri, firstPlaylist.name);
+       } else {
+         showNotification('⚠️ No playlists found', 'warning');
+       }
+     }
+
+     // Real Spotify Play/Pause Control
+     async function togglePlayPause() {
+       if (!isSpotifyConnected) {
+         showNotification('⚠️ Please connect to Spotify first', 'warning');
+         return;
+       }
+
+       try {
+         let response;
+         if (isPlaying) {
+           response = await fetch('/api/spotify/pause', { method: 'POST' });
+         } else {
+           response = await fetch('/api/spotify/play', { 
+             method: 'POST',
+             headers: {'Content-Type': 'application/json'},
+             body: JSON.stringify({})
+           });
+         }
+         
+         const data = await response.json();
+         
+         if (data.success) {
+           togglePlayPauseUI();
+           showNotification(isPlaying ? '⏸️ Music paused' : '▶️ Music playing', 'success');
+           
+           // Get current track info
+           setTimeout(getCurrentTrack, 500);
+         } else {
+           showNotification('⚠️ ' + (data.error || 'Playback control failed'), 'warning');
+         }
+       } catch (error) {
+         console.error('Error controlling playback:', error);
+         showNotification('⚠️ Playback control failed', 'warning');
+       }
+     }
+
+     // Toggle UI without API call
+     function togglePlayPauseUI() {
+       const playIcon = document.getElementById('playIcon');
+       
+       if (isPlaying) {
+         playIcon.textContent = '▶️';
+         isPlaying = false;
+         stopVinylAnimation();
+       } else {
+         playIcon.textContent = '⏸️';
+         isPlaying = true;
+         startVinylAnimation();
+       }
+     }
+
+     // Real Spotify Previous Track
+     async function previousTrack() {
+       if (!isSpotifyConnected) {
+         showNotification('⚠️ Please connect to Spotify first', 'warning');
+         return;
+       }
+
+       try {
+         const response = await fetch('/api/spotify/previous', { method: 'POST' });
+         const data = await response.json();
+         
+         if (data.success) {
+           showNotification('⏮️ Previous track', 'info');
+           setTimeout(getCurrentTrack, 1000);
+         } else {
+           showNotification('⚠️ ' + (data.error || 'Failed to skip to previous'), 'warning');
+         }
+       } catch (error) {
+         console.error('Error skipping to previous:', error);
+         showNotification('⚠️ Failed to skip to previous', 'warning');
+       }
+     }
+
+     // Real Spotify Next Track
+     async function nextTrack() {
+       if (!isSpotifyConnected) {
+         showNotification('⚠️ Please connect to Spotify first', 'warning');
+         return;
+       }
+
+       try {
+         const response = await fetch('/api/spotify/next', { method: 'POST' });
+         const data = await response.json();
+         
+         if (data.success) {
+           showNotification('⏭️ Next track', 'info');
+           setTimeout(getCurrentTrack, 1000);
+         } else {
+           showNotification('⚠️ ' + (data.error || 'Failed to skip to next'), 'warning');
+         }
+       } catch (error) {
+         console.error('Error skipping to next:', error);
+         showNotification('⚠️ Failed to skip to next', 'warning');
+       }
+     }
+
+     // Get current playing track from Spotify
+     async function getCurrentTrack() {
+       if (!isSpotifyConnected) return;
+
+       try {
+         const response = await fetch('/api/spotify/current');
+         const data = await response.json();
+         
+         if (data.item) {
+           updateCurrentTrack(data.item.name, data.item.artists[0].name);
+           
+           // Update play state
+           if (data.is_playing !== isPlaying) {
+             isPlaying = data.is_playing;
+             const playIcon = document.getElementById('playIcon');
+             playIcon.textContent = isPlaying ? '⏸️' : '▶️';
+             
+             if (isPlaying) {
+               startVinylAnimation();
+             } else {
+               stopVinylAnimation();
+             }
+           }
+         } else if (data.is_playing === false) {
+           updateCurrentTrack('No track playing', 'Connect to Spotify');
+           isPlaying = false;
+           stopVinylAnimation();
+           document.getElementById('playIcon').textContent = '▶️';
+         }
+       } catch (error) {
+         console.error('Error getting current track:', error);
+       }
+     }
+
+     function updateCurrentTrack(title, artist) {
+       document.getElementById('trackTitle').textContent = title;
+       document.getElementById('trackArtist').textContent = artist;
+       
+       if (isPlaying) {
+         startVinylAnimation();
+       }
+     }
+
+
+     function startVinylAnimation() {
+       const vinyl = document.querySelector('.vinyl-animation');
+       vinyl.style.animation = 'spin 3s linear infinite';
+     }
+
+     function stopVinylAnimation() {
+       const vinyl = document.querySelector('.vinyl-animation');
+       vinyl.style.animation = 'none';
+     }
+
+     function showNotification(message, type) {
+       const notification = document.createElement('div');
+       notification.className = `notification ${type}`;
+       notification.innerHTML = message;
+       document.body.appendChild(notification);
+       
+       setTimeout(() => {
+         notification.remove();
+       }, 3000);
+     }
+
+     // Volume control
+     document.getElementById('volumeSlider').addEventListener('input', function(e) {
+       currentVolume = e.target.value;
+       showNotification(`🔊 Volume: ${currentVolume}%`, 'info');
+     });
+
+     // Initialize Spotify sidebar
+    // Embedded Player Functions
+    function showEmbeddedPlayer() {
+      const player = document.getElementById('embeddedPlayer');
+      player.style.display = 'block';
+      showNotification('📺 Mini Player opened!', 'success');
+    }
+     
+     function hideEmbeddedPlayer() {
+       const player = document.getElementById('embeddedPlayer');
+       player.style.display = 'none';
+       showNotification('📺 Mini Player closed', 'info');
+     }
+     
+     
+     // Microsoft 365 Copilot Function - Simplified for automatic opening
+     function openCopilot() {
+       showNotification('🤖 Opening Microsoft 365 Copilot...', 'success');
+       
+       // Open Microsoft 365 Copilot directly
+       window.open('https://copilot.microsoft.com/', '_blank');
+       
+       // Also try to open the desktop app if available (won't interfere with web version)
+       try {
+         const appLink = document.createElement('a');
+         appLink.href = 'ms-copilot://';
+         appLink.style.display = 'none';
+         document.body.appendChild(appLink);
+         appLink.click();
+         document.body.removeChild(appLink);
+       } catch (error) {
+         // Silently fail if desktop app not available
+         console.log('Desktop Copilot app not available');
+       }
+     }
+
+     // Spotify App Function - Open Spotify directly
+     function openSpotifyApp() {
+       showNotification('🎵 Opening Spotify...', 'success');
+       
+       // Open Spotify web player directly
+       window.open('https://open.spotify.com/', '_blank');
+       
+       // Also try to open the desktop app if available
+       try {
+         const appLink = document.createElement('a');
+         appLink.href = 'spotify:';
+         appLink.style.display = 'none';
+         document.body.appendChild(appLink);
+         appLink.click();
+         document.body.removeChild(appLink);
+       } catch (error) {
+         // Silently fail if desktop app not available
+         console.log('Desktop Spotify app not available');
+       }
+     }
+
+     // Focus Mode Variables
+     let focusTimer = null;
+     let focusStartTime = null;
+     let focusElapsedTime = 0;
+     let focusPausedTime = 0;
+     let isFocusActive = false;
+     let isFocusPaused = false;
+
+     // Focus Mode Functions
+     function startFocusMode() {
+       if (isFocusPaused) {
+         // Resume from pause
+         focusStartTime = Date.now() - focusElapsedTime;
+         isFocusPaused = false;
+       } else {
+         // Start new session
+         focusStartTime = Date.now();
+         focusElapsedTime = 0;
+       }
+       
+       isFocusActive = true;
+       
+       // Update UI
+       document.getElementById('startFocusBtn').style.display = 'none';
+       document.getElementById('pauseFocusBtn').style.display = 'inline-block';
+       document.getElementById('stopFocusBtn').style.display = 'inline-block';
+       
+       const focusCard = document.getElementById('focusModeCard');
+       focusCard.classList.add('focus-active');
+       focusCard.classList.remove('focus-paused');
+       
+       // Start timer
+       focusTimer = setInterval(updateFocusTimer, 1000);
+       
+       showNotification('🍉 Focus Mode Started! Stay focused!', 'success');
+       
+       // Hide Spotify notifications during focus
+       if (typeof showNotification !== 'undefined') {
+         const originalShowNotification = showNotification;
+         window.focusShowNotification = originalShowNotification;
+       }
+     }
+
+     function pauseFocusMode() {
+       if (!isFocusActive) return;
+       
+       isFocusPaused = true;
+       clearInterval(focusTimer);
+       
+       // Update UI
+       document.getElementById('startFocusBtn').style.display = 'inline-block';
+       document.getElementById('startFocusBtn').textContent = '▶️ Resume';
+       document.getElementById('pauseFocusBtn').style.display = 'none';
+       
+       const focusCard = document.getElementById('focusModeCard');
+       focusCard.classList.remove('focus-active');
+       focusCard.classList.add('focus-paused');
+       
+       showNotification('⏸️ Focus paused. Take a break!', 'info');
+     }
+
+     function stopFocusMode() {
+       if (!isFocusActive && !isFocusPaused) return;
+       
+       // Calculate session time
+       const sessionTime = Math.floor(focusElapsedTime / 1000);
+       
+       // Save study time
+       saveStudySession(sessionTime);
+       
+       // Reset everything
+       isFocusActive = false;
+       isFocusPaused = false;
+       focusElapsedTime = 0;
+       clearInterval(focusTimer);
+       
+       // Update UI
+       document.getElementById('startFocusBtn').style.display = 'inline-block';
+       document.getElementById('startFocusBtn').textContent = '🍉 Start Focus';
+       document.getElementById('pauseFocusBtn').style.display = 'none';
+       document.getElementById('stopFocusBtn').style.display = 'none';
+       document.getElementById('timerDisplay').textContent = '00:00:00';
+       
+       const focusCard = document.getElementById('focusModeCard');
+       focusCard.classList.remove('focus-active', 'focus-paused');
+       
+       updateStudyStats();
+       
+       const hours = Math.floor(sessionTime / 3600);
+       const minutes = Math.floor((sessionTime % 3600) / 60);
+       const timeStr = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+       
+       showNotification(`🎉 Great job! You studied for ${timeStr}`, 'success');
+     }
+
+     function updateFocusTimer() {
+       if (!isFocusActive || isFocusPaused) return;
+       
+       focusElapsedTime = Date.now() - focusStartTime;
+       const totalSeconds = Math.floor(focusElapsedTime / 1000);
+       
+       const hours = Math.floor(totalSeconds / 3600);
+       const minutes = Math.floor((totalSeconds % 3600) / 60);
+       const seconds = totalSeconds % 60;
+       
+       const display = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+       document.getElementById('timerDisplay').textContent = display;
+     }
+
+     function saveStudySession(seconds) {
+       const today = new Date().toDateString();
+       
+       // Get existing data
+       let studyData = JSON.parse(localStorage.getItem('watermelonStudyData') || '{}');
+       
+       // Initialize if needed
+       if (!studyData.sessions) studyData.sessions = [];
+       if (!studyData.dailyStats) studyData.dailyStats = {};
+       
+       // Add session
+       studyData.sessions.push({
+         date: today,
+         duration: seconds,
+         timestamp: Date.now()
+       });
+       
+       // Update daily stats
+       if (!studyData.dailyStats[today]) {
+         studyData.dailyStats[today] = 0;
+       }
+       studyData.dailyStats[today] += seconds;
+       
+       // Save to localStorage
+       localStorage.setItem('watermelonStudyData', JSON.stringify(studyData));
+     }
+
+     function updateStudyStats() {
+       const studyData = JSON.parse(localStorage.getItem('watermelonStudyData') || '{}');
+       const today = new Date().toDateString();
+       
+       // Calculate today's study time
+       const todaySeconds = studyData.dailyStats ? (studyData.dailyStats[today] || 0) : 0;
+       const todayHours = Math.floor(todaySeconds / 3600);
+       const todayMinutes = Math.floor((todaySeconds % 3600) / 60);
+       
+       // Calculate total study time
+       let totalSeconds = 0;
+       if (studyData.sessions) {
+         totalSeconds = studyData.sessions.reduce((sum, session) => sum + session.duration, 0);
+       }
+       const totalHours = Math.floor(totalSeconds / 3600);
+       const totalMinutes = Math.floor((totalSeconds % 3600) / 60);
+       
+       // Update display
+       document.getElementById('todayStudyTime').textContent = `${todayHours}h ${todayMinutes}m`;
+       document.getElementById('totalStudyTime').textContent = `${totalHours}h ${totalMinutes}m`;
+     }
+     
+    // Add keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey || e.metaKey) {
+        switch(e.key) {
+          case 'p': // Ctrl+P for play/pause
+            e.preventDefault();
+            togglePlayPause();
+            break;
+          case 's': // Ctrl+S for Spotify toggle
+            e.preventDefault();
+            toggleSpotify();
+            break;
+          case 'c': // Ctrl+C for Copilot
+            e.preventDefault();
+            openCopilot();
+            break;
+        }
+      }
+       
+       // Space bar for play/pause (only when not in input fields and not for scrolling)
+       if (e.code === 'Space' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA' && !e.target.isContentEditable) {
+         // Only prevent default if we're not trying to scroll
+         if (!e.shiftKey && document.activeElement.tagName !== 'BODY') {
+           return; // Allow normal space behavior for scrolling
+         }
+         e.preventDefault();
+         togglePlayPause();
+       }
+     });
+
+     document.addEventListener('DOMContentLoaded', function() {
+       // Auto-hide sidebar on mobile
+       if (window.innerWidth <= 768) {
+         toggleSpotify();
+       }
+       
+       // Check if already connected to Spotify
+       loadUserPlaylists();
+       
+       // Start periodic updates for current track
+       setInterval(getCurrentTrack, 3000);
+       
+       // Initialize Focus Mode stats
+       updateStudyStats();
+       
+      // Show welcome message with keyboard shortcuts
+      setTimeout(() => {
+        showNotification('🎹 Shortcuts: Ctrl+P (Play), Ctrl+S (Sidebar), Space (Pause)', 'info');
+      }, 2000);
+       
+       // Show Spotify connection info
+       setTimeout(() => {
+         if (!isSpotifyConnected) {
+           showNotification('🎵 Connect your Spotify to control music directly!', 'info');
+         }
+       }, 5000);
+     });
+   </script>
+</body>
+</html>

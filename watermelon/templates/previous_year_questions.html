@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previous Year Questions - Watermelon Study Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .main-content {
+            max-height: 80vh;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        .main-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        .main-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        .main-content::-webkit-scrollbar-thumb {
+            background: rgba(102, 126, 234, 0.6);
+            border-radius: 10px;
+        }
+        .main-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(102, 126, 234, 0.8);
+        }
+        .sticky-navigation {
+            position: sticky;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            backdrop-filter: blur(10px);
+            border-radius: 0 0 15px 15px;
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .question-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        .question-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        .year-badge {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        .type-badge {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            padding: 3px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+        .difficulty-badge {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+        .difficulty-easy { background: #d4edda; color: #155724; }
+        .difficulty-medium { background: #fff3cd; color: #856404; }
+        .difficulty-hard { background: #f8d7da; color: #721c24; }
+        .topic-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .topic-header {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        .stats-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            color: white;
+        }
+        .filter-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .ms-365-copilot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: linear-gradient(45deg, #0078d4, #106ebe);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 20px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 120, 212, 0.3);
+            transition: all 0.3s ease;
+        }
+        .ms-365-copilot:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 120, 212, 0.4);
+        }
+        .option-item {
+            padding: 8px 15px;
+            margin: 5px 0;
+            background: rgba(248, 249, 250, 0.8);
+            border-radius: 8px;
+            border-left: 4px solid #e9ecef;
+        }
+        .option-item.correct {
+            background: rgba(212, 237, 218, 0.9);
+            border-left-color: #28a745;
+        }
+        .explanation-box {
+            background: rgba(255, 248, 225, 0.9);
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h2 class="mb-0">
+                            <i class="fas fa-history text-primary"></i>
+                            Previous Year Questions - UPSC
+                        </h2>
+                        <p class="text-muted mb-0">Practice questions from past years organized by topic</p>
+                    </div>
+                    <div class="card-body">
+                        <!-- Filter Section -->
+                        <div class="filter-section">
+                            <h5 class="text-white mb-3">
+                                <i class="fas fa-filter"></i>
+                                Filter Questions
+                            </h5>
+                            <form method="GET" action="/previous-year-questions">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="form-label text-white">Subject:</label>
+                                        <select name="subject" class="form-select" onchange="this.form.submit()">
+                                            <option value="">Select Subject</option>
+                                            {% for subject in subjects %}
+                                                <option value="{{ subject.name }}" 
+                                                    {% if selected_subject == subject.name %}selected{% endif %}>
+                                                    {{ subject.name }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label text-white">Topic:</label>
+                                        <select name="topic" class="form-select" onchange="this.form.submit()">
+                                            <option value="">All Topics</option>
+                                            {% for topic in topics %}
+                                                <option value="{{ topic.name }}" 
+                                                    {% if selected_topic == topic.name %}selected{% endif %}>
+                                                    {{ topic.name }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label text-white">Year:</label>
+                                        <select name="year" class="form-select" onchange="this.form.submit()">
+                                            <option value="">All Years</option>
+                                            {% for year in available_years %}
+                                                <option value="{{ year }}" 
+                                                    {% if selected_year == year|string %}selected{% endif %}>
+                                                    {{ year }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label text-white">Type:</label>
+                                        <select name="type" class="form-select" onchange="this.form.submit()">
+                                            <option value="all" {% if question_type == 'all' %}selected{% endif %}>All Types</option>
+                                            <option value="prelims" {% if question_type == 'prelims' %}selected{% endif %}>Prelims</option>
+                                            <option value="mains" {% if question_type == 'mains' %}selected{% endif %}>Mains</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Main Content Container with Scroll -->
+                        <div class="main-content">
+                            <!-- Statistics -->
+                            {% if questions %}
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <div class="stats-card">
+                                        <h4>{{ questions|length }}</h4>
+                                        <p>Total Questions</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="stats-card">
+                                        <h4>{{ available_years|length }}</h4>
+                                        <p>Years Available</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="stats-card">
+                                        <h4>{{ grouped_questions|length }}</h4>
+                                        <p>Years with Questions</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <!-- Questions Display -->
+                            {% if questions %}
+                                {% if grouped_questions %}
+                                    {% for year, topics_dict in grouped_questions.items() %}
+                                        <div class="topic-section">
+                                            <h4 class="text-center mb-3">
+                                                <span class="year-badge">{{ year }}</span>
+                                            </h4>
+                                            
+                                            {% for topic_name, topic_questions in topics_dict.items() %}
+                                                <div class="mb-4">
+                                                    <h5 class="topic-header">
+                                                        <i class="fas fa-book"></i>
+                                                        {{ topic_name }} ({{ topic_questions|length }} questions)
+                                                    </h5>
+                                                    
+                                                    {% for question in topic_questions %}
+                                                        <div class="question-card">
+                                                            <div class="card-body">
+                                                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                                                    <div>
+                                                                        <span class="type-badge">{{ question.question_type.title() }}</span>
+                                                                        <span class="difficulty-badge difficulty-{{ question.difficulty }}">
+                                                                            {{ question.difficulty.title() }}
+                                                                        </span>
+                                                                    </div>
+                                                                    <small class="text-muted">Question #{{ question.id }}</small>
+                                                                </div>
+                                                                
+                                                                <h6 class="question-text mb-3">{{ question.question_text }}</h6>
+                                                                
+                                                                <div class="options">
+                                                                    <div class="option-item {% if question.correct_answer == 'A' %}correct{% endif %}">
+                                                                        <strong>A)</strong> {{ question.option_a }}
+                                                                    </div>
+                                                                    <div class="option-item {% if question.correct_answer == 'B' %}correct{% endif %}">
+                                                                        <strong>B)</strong> {{ question.option_b }}
+                                                                    </div>
+                                                                    <div class="option-item {% if question.correct_answer == 'C' %}correct{% endif %}">
+                                                                        <strong>C)</strong> {{ question.option_c }}
+                                                                    </div>
+                                                                    <div class="option-item {% if question.correct_answer == 'D' %}correct{% endif %}">
+                                                                        <strong>D)</strong> {{ question.option_d }}
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                {% if question.explanation %}
+                                                                    <div class="explanation-box">
+                                                                        <h6><i class="fas fa-lightbulb"></i> Explanation:</h6>
+                                                                        <p class="mb-0">{{ question.explanation }}</p>
+                                                                    </div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="alert alert-info">
+                                        <h5><i class="fas fa-info-circle"></i> Questions Found</h5>
+                                        <p>{{ questions|length }} questions match your criteria, but they don't have proper year/topic organization.</p>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                <div class="alert alert-warning text-center">
+                                    <h5><i class="fas fa-search"></i> No Questions Found</h5>
+                                    <p>No previous year questions found matching your criteria. Try adjusting your filters or select a different subject.</p>
+                                    {% if not selected_subject %}
+                                        <p><strong>Tip:</strong> Start by selecting a subject to see available questions.</p>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Sticky Navigation -->
+                        <div class="sticky-navigation">
+                            <div class="text-center">
+                                <a href="/dashboard" class="btn btn-primary me-2">
+                                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                                </a>
+                                <a href="/quizzes" class="btn btn-primary">
+                                    <i class="fas fa-question-circle"></i> Take Quiz
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Microsoft 365 Copilot Button -->
+    <button class="ms-365-copilot" onclick="openCopilot()">
+        <i class="fas fa-robot"></i> Copilot
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function openCopilot() {
+            // Microsoft 365 Copilot opening logic
+            const isMobile = window.innerWidth <= 768;
+            const copilotUrl = 'https://copilot.microsoft.com/';
+            
+            if (isMobile) {
+                // On mobile, open in same tab
+                window.location.href = copilotUrl;
+            } else {
+                // On desktop, open in new tab/window
+                const newWindow = window.open(copilotUrl, '_blank');
+                if (!newWindow) {
+                    // Fallback if popup blocked
+                    window.location.href = copilotUrl;
+                }
+            }
+        }
+
+        // Auto-submit form when filters change
+        document.addEventListener('DOMContentLoaded', function() {
+            const selects = document.querySelectorAll('select');
+            selects.forEach(select => {
+                select.addEventListener('change', function() {
+                    this.form.submit();
+                });
+            });
+        });
+    </script>
+</body>
+</html>

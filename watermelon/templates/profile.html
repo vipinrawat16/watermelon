@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Watermelon Study Hub - User Profile</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="icon" href="{{ url_for('static', filename='watermelon_tab_img.png') }}" type="image/png" />
+</head>
+<body>
+   <div class="cursor" id="cursor"></div>
+   
+   <!-- Navigation Header -->
+   <header class="navbar">
+     <div class="nav-container">
+       <div class="nav-brand">
+         <h1>🍉 Watermelon Study Hub</h1>
+       </div>
+       <nav class="nav-menu">
+        <a href="/dashboard" class="nav-link active">Dashboard</a>
+        <a href="/study-dashboard" class="nav-link">Study Mode</a>
+        <a href="/profile" class="nav-link">Profile</a>
+        <a href="/settings" class="nav-link">Settings</a>
+        <button class="copilot-btn" onclick="openCopilot()" title="Open Microsoft 365 Copilot">
+          <span class="copilot-icon">🤖</span>
+          <span class="copilot-text">Copilot</span>
+        </button>
+        <button class="spotify-nav-btn" onclick="openSpotifyApp()" title="Open Spotify">
+          <span class="spotify-nav-icon">🎵</span>
+          <span class="spotify-nav-text">Spotify</span>
+        </button>
+        <a href="/logout" class="nav-link logout">Logout</a>
+       </nav>
+     </div>
+   </header>
+
+
+   <!-- Main Profile Content -->
+   <main class="profile-main">
+     <div class="profile-container">
+       
+       <!-- Profile Header -->
+       <section class="profile-header">
+         <div class="profile-avatar">
+           <div class="avatar-circle">
+             <span class="avatar-text">{{ user.username[0].upper() }}</span>
+           </div>
+         </div>
+         <div class="profile-info">
+           <h1>{{ user.username }}</h1>
+             <p class="profile-subtitle">Watermelon Study Hub User</p>
+           <div class="profile-badges">
+             <span class="badge">Active Member</span>
+             <span class="badge">🍉 Verified</span>
+           </div>
+         </div>
+       </section>
+
+       <!-- Profile Details -->
+       <section class="profile-details">
+         <div class="profile-grid">
+           
+           <!-- Personal Information Card -->
+           <div class="profile-card">
+             <h3>📋 Personal Information</h3>
+             <div class="info-grid">
+               <div class="info-item">
+                 <label>User ID:</label>
+                 <span>#{{ user.id }}</span>
+               </div>
+               <div class="info-item">
+                 <label>Username:</label>
+                 <span>{{ user.username }}</span>
+               </div>
+               <div class="info-item">
+                 <label>Account Type:</label>
+                 <span>Standard User</span>
+               </div>
+               <div class="info-item">
+                 <label>Status:</label>
+                 <span class="status-active">🟢 Active</span>
+               </div>
+             </div>
+           </div>
+
+           <!-- Account Statistics -->
+           <div class="profile-card">
+             <h3>📊 Account Statistics</h3>
+             <div class="stats-grid">
+               <div class="stat-item">
+                 <div class="stat-number">1</div>
+                 <div class="stat-label">Login Sessions</div>
+               </div>
+               <div class="stat-item">
+                 <div class="stat-number">0</div>
+                 <div class="stat-label">Profile Updates</div>
+               </div>
+               <div class="stat-item">
+                 <div class="stat-number">{{ user.id }}</div>
+                 <div class="stat-label">User Rank</div>
+               </div>
+               <div class="stat-item">
+                 <div class="stat-number">100%</div>
+                 <div class="stat-label">Security Score</div>
+               </div>
+             </div>
+           </div>
+
+           <!-- Security Information -->
+           <div class="profile-card">
+             <h3>🔐 Security Information</h3>
+             <div class="security-items">
+               <div class="security-item">
+                 <span class="security-icon">✅</span>
+                 <div class="security-info">
+                   <strong>Password Protected</strong>
+                   <p>Your account is secured with encrypted password</p>
+                 </div>
+               </div>
+               <div class="security-item">
+                 <span class="security-icon">🔒</span>
+                 <div class="security-info">
+                   <strong>Session Security</strong>
+                   <p>Active session management enabled</p>
+                 </div>
+               </div>
+               <div class="security-item">
+                 <span class="security-icon">🛡️</span>
+                 <div class="security-info">
+                   <strong>Account Protection</strong>
+                   <p>SQLAlchemy ORM security features active</p>
+                 </div>
+               </div>
+             </div>
+           </div>
+
+           <!-- Recent Activity -->
+           <div class="profile-card">
+             <h3>🚀 Recent Activity</h3>
+             <div class="activity-list">
+               <div class="activity-item">
+                 <span class="activity-icon">🔑</span>
+                 <div class="activity-info">
+                   <strong>Successful Login</strong>
+                   <p>Just now - Dashboard accessed</p>
+                 </div>
+               </div>
+               <div class="activity-item">
+                 <span class="activity-icon">👤</span>
+                 <div class="activity-info">
+                   <strong>Profile Viewed</strong>
+                   <p>Just now - Profile page accessed</p>
+                 </div>
+               </div>
+               <div class="activity-item">
+                 <span class="activity-icon">🍉</span>
+                 <div class="activity-info">
+                   <strong>Account Created</strong>
+                   <p>Recently - Welcome to Watermelon Study Hub!</p>
+                 </div>
+               </div>
+             </div>
+           </div>
+
+         </div>
+       </section>
+
+       <!-- Action Buttons -->
+       <section class="profile-actions">
+         <a href="/settings" class="action-btn primary">⚙️ Edit Settings</a>
+         <a href="/dashboard" class="action-btn secondary">📊 Back to Dashboard</a>
+         <a href="/logout" class="action-btn danger">🚪 Logout</a>
+       </section>
+
+     </div>
+   </main>
+
+   <script>
+     const cursor = document.getElementById('cursor');
+     document.addEventListener('mousemove', (e) => {
+       cursor.style.left = e.clientX + 'px';
+       cursor.style.top = e.clientY + 'px';
+     });
+
+     // Add card hover effects
+     document.querySelectorAll('.profile-card').forEach(card => {
+       card.addEventListener('mouseenter', () => {
+         card.style.transform = 'translateY(-3px)';
+       });
+       card.addEventListener('mouseleave', () => {
+         card.style.transform = 'translateY(0)';
+       });
+     });
+
+     // Microsoft 365 Copilot Function - Simplified for automatic opening
+     function openCopilot() {
+       showNotification('🤖 Opening Microsoft 365 Copilot...', 'success');
+       
+       // Open Microsoft 365 Copilot directly
+       window.open('https://copilot.microsoft.com/', '_blank');
+       
+       // Also try to open the desktop app if available (won't interfere with web version)
+       try {
+         const appLink = document.createElement('a');
+         appLink.href = 'ms-copilot://';
+         appLink.style.display = 'none';
+         document.body.appendChild(appLink);
+         appLink.click();
+         document.body.removeChild(appLink);
+       } catch (error) {
+         // Silently fail if desktop app not available
+         console.log('Desktop Copilot app not available');
+       }
+     }
+
+     // Spotify App Function - Open Spotify directly
+     function openSpotifyApp() {
+       showNotification('🎵 Opening Spotify...', 'success');
+       
+       // Open Spotify web player directly
+       window.open('https://open.spotify.com/', '_blank');
+       
+       // Also try to open the desktop app if available
+       try {
+         const appLink = document.createElement('a');
+         appLink.href = 'spotify:';
+         appLink.style.display = 'none';
+         document.body.appendChild(appLink);
+         appLink.click();
+         document.body.removeChild(appLink);
+       } catch (error) {
+         // Silently fail if desktop app not available
+         console.log('Desktop Spotify app not available');
+       }
+     }
+     
+     function showNotification(message, type) {
+       const notification = document.createElement('div');
+       notification.className = `notification ${type}`;
+       notification.innerHTML = message;
+       document.body.appendChild(notification);
+       
+       setTimeout(() => {
+         notification.remove();
+       }, 3000);
+     }
+
+     document.getElementById('volumeSlider').addEventListener('input', function(e) {
+       currentVolume = e.target.value;
+       showNotification(`🔊 Volume: ${currentVolume}%`, 'info');
+     });
+
+     document.addEventListener('DOMContentLoaded', function() {
+       if (window.innerWidth <= 768) {
+         toggleSpotify();
+       }
+     });
+   </script>
+</body>
+</html>

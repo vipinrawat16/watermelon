@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Watermelon Study Hub - Welcome</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="icon" href="{{ url_for('static', filename='watermelon_tab_img.png') }}" type="image/png" />
+</head>
+<body>
+   <div class="cursor" id="cursor"></div>
+  <div class="container">
+    <div class="gif-side"></div>
+    <div class="form-side">
+      <div class="login-container">
+        <h2>Welcome, {{ username }}!</h2>
+        <p>You have successfully logged in to Watermelon Study Hub.</p>
+        
+        <div class="welcome-actions">
+          <a href="/logout" class="logout-btn">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+  </script>
+</body>
+</html>

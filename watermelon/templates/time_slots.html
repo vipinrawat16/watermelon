@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🍉 Watermelon Study Hub - Time Slots</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="icon" href="{{ url_for('static', filename='watermelon_tab_img.png') }}" type="image/png" />
+  <style>
+    .time-slot-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 15px;
+      padding: 20px;
+      color: white;
+      margin: 15px 0;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    
+    .slot-form {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    
+    .form-group {
+      margin: 15px 0;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #333;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .slot-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .slot-item:last-child {
+      border-bottom: none;
+    }
+    
+    .slot-info h4 {
+      margin: 0 0 5px 0;
+      font-size: 18px;
+    }
+    
+    .slot-info p {
+      margin: 0;
+      opacity: 0.8;
+      font-size: 14px;
+    }
+    
+    .slot-time {
+      text-align: right;
+      font-weight: bold;
+    }
+    
+    .completed {
+      opacity: 0.6;
+      text-decoration: line-through;
+    }
+    
+    .no-slots {
+      text-align: center;
+      padding: 40px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+   <div class="cursor" id="cursor"></div>
+   
+   <!-- Navigation Header -->
+   <header class="navbar">
+     <div class="nav-container">
+       <div class="nav-brand">
+         <h1>🍉 Watermelon Study Hub</h1>
+       </div>
+       <nav class="nav-menu">
+         <a href="/dashboard" class="nav-link">Dashboard</a>
+         <a href="/study-dashboard" class="nav-link">Study Mode</a>
+         <a href="/profile" class="nav-link">Profile</a>
+         <a href="/settings" class="nav-link">Settings</a>
+         <a href="/logout" class="nav-link logout">Logout</a>
+       </nav>
+     </div>
+   </header>
+
+   <!-- Main Content -->
+   <main class="dashboard-main">
+     <div class="dashboard-container">
+       
+       <!-- Welcome Section -->
+       <section class="welcome-section">
+         <h2>📅 Time Slot Management</h2>
+         <p>Schedule and manage your study sessions</p>
+       </section>
+
+       <!-- Add New Time Slot Form -->
+       <section class="slot-form">
+         <h3>📝 Schedule New Study Session</h3>
+         <form method="POST">
+           <div class="form-group">
+             <label for="title">Session Title:</label>
+             <input type="text" id="title" name="title" class="form-control" placeholder="e.g., History Study Session" required>
+           </div>
+           
+           <div class="form-group">
+             <label for="subject">Subject:</label>
+             <select id="subject" name="subject" class="form-control" required>
+               <option value="">Select Subject</option>
+               {% for subject in subjects %}
+                 <option value="{{ subject.name }}">{{ subject.name }}</option>
+               {% endfor %}
+             </select>
+           </div>
+           
+           <div class="form-group">
+             <label for="start_time">Start Time:</label>
+             <input type="datetime-local" id="start_time" name="start_time" class="form-control" required>
+           </div>
+           
+           <div class="form-group">
+             <label for="end_time">End Time:</label>
+             <input type="datetime-local" id="end_time" name="end_time" class="form-control" required>
+           </div>
+           
+           <div class="form-group">
+             <label for="description">Description (Optional):</label>
+             <textarea id="description" name="description" class="form-control" rows="3" placeholder="Additional notes about this study session..."></textarea>
+           </div>
+           
+           <button type="submit" class="btn-primary">📅 Schedule Session</button>
+         </form>
+       </section>
+
+       <!-- Scheduled Time Slots -->
+       <section>
+         <h3>🕒 Your Scheduled Sessions</h3>
+         
+         {% if slots %}
+           {% for slot in slots %}
+             <div class="time-slot-card {% if slot.is_completed %}completed{% endif %}">
+               <div class="slot-item">
+                 <div class="slot-info">
+                   <h4>{{ slot.title }}</h4>
+                   <p><strong>Subject:</strong> {{ slot.subject }}</p>
+                   {% if slot.description %}
+                     <p><strong>Description:</strong> {{ slot.description }}</p>
+                   {% endif %}
+                   <p><strong>Status:</strong> 
+                     {% if slot.is_completed %}
+                       ✅ Completed
+                     {% else %}
+                       ⏳ Scheduled
+                     {% endif %}
+                   </p>
+                 </div>
+                 <div class="slot-time">
+                   <div>{{ slot.start_time.strftime('%d %b %Y') }}</div>
+                   <div>{{ slot.start_time.strftime('%H:%M') }} - {{ slot.end_time.strftime('%H:%M') }}</div>
+                   <div style="font-size: 12px; opacity: 0.8;">
+                     {% set duration = ((slot.end_time - slot.start_time).total_seconds() / 60) | int %}
+                     Duration: {{ duration }} minutes
+                   </div>
+                 </div>
+               </div>
+             </div>
+           {% endfor %}
+         {% else %}
+           <div class="time-slot-card">
+             <div class="no-slots">
+               <h3>📅 No scheduled sessions yet</h3>
+               <p>Create your first study session using the form above!</p>
+             </div>
+           </div>
+         {% endif %}
+       </section>
+
+       <!-- Quick Actions -->
+       <section class="dashboard-grid" style="margin-top: 30px;">
+         <div class="dashboard-card">
+           <div class="card-icon">🎯</div>
+           <div class="card-content">
+             <h3>Study Mode</h3>
+             <p>Focus timer and task management</p>
+             <a href="/study-dashboard" class="card-button">Enter Study Mode</a>
+           </div>
+         </div>
+
+         <div class="dashboard-card">
+           <div class="card-icon">📝</div>
+           <div class="card-content">
+             <h3>Study Notes</h3>
+             <p>Create and manage your notes</p>
+             <a href="/notes/add" class="card-button">Add Note</a>
+           </div>
+         </div>
+
+         <div class="dashboard-card">
+           <div class="card-icon">🧠</div>
+           <div class="card-content">
+             <h3>Take Quiz</h3>
+             <p>Test your knowledge</p>
+             <a href="/quizzes/attempt" class="card-button">Start Quiz</a>
+           </div>
+         </div>
+       </section>
+
+     </div>
+   </main>
+
+   <script>
+    // Set default times (next hour and +1 hour)
+    document.addEventListener('DOMContentLoaded', function() {
+      const now = new Date();
+      const nextHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1, 0);
+      const endTime = new Date(nextHour.getTime() + 60 * 60 * 1000); // +1 hour
+      
+      document.getElementById('start_time').value = nextHour.toISOString().slice(0, 16);
+      document.getElementById('end_time').value = endTime.toISOString().slice(0, 16);
+    });
+
+    // Cursor effect
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+
+    // Add sparkle effect on click
+    document.addEventListener('click', (e) => {
+      createSparkle(e.clientX, e.clientY);
+    });
+
+    function createSparkle(x, y) {
+      const sparkles = ['✨', '⭐', '💖', '🌟', '💫'];
+      const sparkle = document.createElement('div');
+      sparkle.className = 'sparkle';
+      sparkle.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+      sparkle.style.cssText = `
+        position: fixed;
+        left: ${x - 10}px;
+        top: ${y - 10}px;
+        font-size: 20px;
+        pointer-events: none;
+        z-index: 1000;
+        animation: sparkleFloat 1s ease-out forwards;
+      `;
+      document.body.appendChild(sparkle);
+      
+      setTimeout(() => {
+        sparkle.remove();
+      }, 1000);
+    }
+
+    // Add sparkle animation CSS
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes sparkleFloat {
+        0% { transform: translateY(0) scale(1); opacity: 1; }
+        100% { transform: translateY(-50px) scale(0.5); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+   </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+    "database": {
+        "name": "my_diary.db",
+        "backup_enabled": true,
+        "backup_interval_hours": 24
+    },
+    "api": {
+        "url": "https://your-diary-website.com/api/entries",
+        "key": "your-api-key-here",
+        "timeout": 30,
+        "retry_attempts": 3
+    },
+    "sync": {
+        "auto_sync": false,
+        "sync_interval_minutes": 60,
+        "max_entries_per_sync": 100
+    },
+    "logging": {
+        "level": "INFO",
+        "file": "diary_sync.log"
+    }
+}

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Watermelon Study Hub - Settings</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="icon" href="{{ url_for('static', filename='watermelon_tab_img.png') }}" type="image/png" />
+</head>
+<body>
+   <div class="cursor" id="cursor"></div>
+   
+   <!-- Navigation Header -->
+   <header class="navbar">
+     <div class="nav-container">
+       <div class="nav-brand">
+         <h1>🍉 Watermelon Study Hub</h1>
+       </div>
+       <nav class="nav-menu">
+        <a href="/dashboard" class="nav-link active">Dashboard</a>
+        <a href="/study-dashboard" class="nav-link">Study Mode</a>
+        <a href="/profile" class="nav-link">Profile</a>
+        <a href="/settings" class="nav-link">Settings</a>
+        <button class="copilot-btn" onclick="openCopilot()" title="Open Microsoft 365 Copilot">
+          <span class="copilot-icon">🤖</span>
+          <span class="copilot-text">Copilot</span>
+        </button>
+        <button class="spotify-nav-btn" onclick="openSpotifyApp()" title="Open Spotify">
+          <span class="spotify-nav-icon">🎵</span>
+          <span class="spotify-nav-text">Spotify</span>
+        </button>
+        <a href="/logout" class="nav-link logout">Logout</a>
+       </nav>
+     </div>
+   </header>
+
+   <!-- Main Settings Content -->
+   <main class="settings-main">
+     <div class="settings-container">
+       
+       <!-- Settings Header -->
+       <section class="settings-header">
+         <h1>⚙️ Settings</h1>
+         <p>Customize your Watermelon Study Hub experience, {{ username }}!</p>
+       </section>
+
+       <!-- Settings Grid -->
+       <section class="settings-grid">
+         
+         <!-- Account Settings -->
+         <div class="settings-card">
+           <h3>👤 Account Settings</h3>
+           <div class="settings-options">
+             <div class="setting-item">
+               <div class="setting-info">
+                 <strong>Username</strong>
+                 <p>Your current username: {{ username }}</p>
+               </div>
+               <button class="setting-btn">Change</button>
+             </div>
+             <div class="setting-item">
+               <div class="setting-info">
+                 <strong>Password</strong>
+                 <p>Update your account password</p>
+               </div>
+               <button class="setting-btn">Update</button>
+             </div>
+             <div class="setting-item">
+               <div class="setting-info">
+                 <strong>Account Type</strong>
+                 <p>Standard User Account</p>
+               </div>
+               <button class="setting-btn disabled" disabled>View</button>
+             </div>
+           </div>
+         </div>
+
+         <!-- Privacy Settings -->
+         <div class="settings-card">
+           <h3>🔒 Privacy & Security</h3>
+           <div class="settings-options">
+             <div class="setting-item">
+               <div class="setting-info">
+                 <strong>Session Timeout</strong>
+                 <p>Automatic logout after inactivity</p>
+               </div>
+               <div class="toggle-switch">
+                 <input type="checkbox" id="session-timeout" checked>
+                 <label for="session-timeout"></label>
+               </div>
+             </div>
+             <div class="setting-item">
+               <div class="setting-info">
+                 <strong>Login Notifications</strong>
+                 <p>Get notified of account access</p>
+               </div>
+               <div class="toggle-switch">
+                 <input type="checkbox" id="login-notifications" checked>
+                 <label for="login-notifications"></label>
+               </div>
+             </div>
+             <div class="setting-item">
+               <div class="setting-info">
+                 <strong>Data Encryption</strong>
+                 <p>Enhanced security for your data</p>
+               </div>
+               <div class="toggle-switch">
+                 <input type="checkbox" id="data-encryption" checked disabled>
+                 <label for="data-encryption"></label>
+               </div>
+             </div>
+           </div>
+         </div>
+
+         <!-- Appearance Settings -->
+         <div class="settings-card">
+           <h3>🎨 Appearance</h3>
+           <div class="settings-options">
+             <div class="setting-item">
+               <div class="setting-info">
+                 <strong>Theme</strong>
+                 <p>Choose your preferred theme</p>
+               </div>
+               <select class="setting-select">
+                 <option value="watermelon" selected>🍉 Watermelon (Default)</option>
+                 <option value="dark">🌙 Dark Mode</option>
+                 <option value="light">☀️ Light Mode</option>
+               </select>
+             </div>
+             <div class="setting-item">
+               <div class="setting-info">
+                 <strong>Custom Cursor</strong>
+                 <p>Watermelon cursor animation</p>
+               </div>
+               <div class="toggle-switch">
+                 <input type="checkbox" id="custom-cursor" checked>
+                 <label for="custom-cursor"></label>
+               </div>
+             </div>
+             <div class="setting-item">
+               <div class="setting-info">
+                 <strong>Animations</strong>
+                 <p>Enable smooth transitions and effects</p>
+               </div>
+               <div class="toggle-switch">
+                 <input type="checkbox" id="animations" checked>
+                 <label for="animations"></label>
+               </div>
+             </div>
+           </div>
+         </div>
+
+         <!-- Application Settings -->
+         <div class="settings-card">
+           <h3>🚀 Application</h3>
+           <div class="settings-options">
+             <div class="setting-item">
+               <div class="setting-info">
+                 <strong>Auto-save</strong>
+                 <p>Automatically save your preferences</p>
+               </div>
+               <div class="toggle-switch">
+                 <input type="checkbox" id="auto-save" checked>
+                 <label for="auto-save"></label>
+               </div>
+             </div>
+             <div class="setting-item">
+               <div class="setting-info">
+                 <strong>Dashboard Layout</strong>
+                 <p>Customize your dashboard view</p>
+               </div>
+               <select class="setting-select">
+                 <option value="grid" selected>Grid View</option>
+                 <option value="list">List View</option>
+                 <option value="compact">Compact View</option>
+               </select>
+             </div>
+             <div class="setting-item">
+               <div class="setting-info">
+                 <strong>Language</strong>
+                 <p>Application language preference</p>
+               </div>
+               <select class="setting-select">
+                 <option value="en" selected>🇺🇸 English</option>
+                 <option value="es">🇪🇸 Español</option>
+                 <option value="fr">🇫🇷 Français</option>
+               </select>
+             </div>
+           </div>
+         </div>
+
+       </section>
+
+       <!-- Action Buttons -->
+       <section class="settings-actions">
+         <button class="action-btn primary" onclick="saveSettings()">💾 Save Changes</button>
+         <button class="action-btn secondary" onclick="resetSettings()">🔄 Reset to Default</button>
+         <a href="/dashboard" class="action-btn tertiary">📊 Back to Dashboard</a>
+       </section>
+
+     </div>
+   </main>
+
+   <script>
+     const cursor = document.getElementById('cursor');
+     document.addEventListener('mousemove', (e) => {
+       cursor.style.left = e.clientX + 'px';
+       cursor.style.top = e.clientY + 'px';
+     });
+
+     // Settings functionality
+     function saveSettings() {
+       // Simulate saving settings
+       const notification = document.createElement('div');
+       notification.className = 'notification success';
+       notification.innerHTML = '✅ Settings saved successfully!';
+       document.body.appendChild(notification);
+       
+       setTimeout(() => {
+         notification.remove();
+       }, 3000);
+     }
+
+     function resetSettings() {
+       if (confirm('Are you sure you want to reset all settings to default?')) {
+         // Reset all toggles and selects
+         document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+           if (!checkbox.disabled) checkbox.checked = true;
+         });
+         
+         document.querySelectorAll('select').forEach(select => {
+           select.selectedIndex = 0;
+         });
+         
+         const notification = document.createElement('div');
+         notification.className = 'notification info';
+         notification.innerHTML = 'ℹ️ Settings reset to default values';
+         document.body.appendChild(notification);
+         
+         setTimeout(() => {
+           notification.remove();
+         }, 3000);
+       }
+     }
+
+     // Add card hover effects
+     document.querySelectorAll('.settings-card').forEach(card => {
+       card.addEventListener('mouseenter', () => {
+         card.style.transform = 'translateY(-3px)';
+       });
+       card.addEventListener('mouseleave', () => {
+         card.style.transform = 'translateY(0)';
+       });
+     });
+
+     // Microsoft 365 Copilot Function - Simplified for automatic opening
+     function openCopilot() {
+       showNotification('🤖 Opening Microsoft 365 Copilot...', 'success');
+       
+       // Open Microsoft 365 Copilot directly
+       window.open('https://copilot.microsoft.com/', '_blank');
+       
+       // Also try to open the desktop app if available (won't interfere with web version)
+       try {
+         const appLink = document.createElement('a');
+         appLink.href = 'ms-copilot://';
+         appLink.style.display = 'none';
+         document.body.appendChild(appLink);
+         appLink.click();
+         document.body.removeChild(appLink);
+       } catch (error) {
+         // Silently fail if desktop app not available
+         console.log('Desktop Copilot app not available');
+       }
+     }
+
+     // Spotify App Function - Open Spotify directly
+     function openSpotifyApp() {
+       showNotification('🎵 Opening Spotify...', 'success');
+       
+       // Open Spotify web player directly
+       window.open('https://open.spotify.com/', '_blank');
+       
+       // Also try to open the desktop app if available
+       try {
+         const appLink = document.createElement('a');
+         appLink.href = 'spotify:';
+         appLink.style.display = 'none';
+         document.body.appendChild(appLink);
+         appLink.click();
+         document.body.removeChild(appLink);
+       } catch (error) {
+         // Silently fail if desktop app not available
+         console.log('Desktop Spotify app not available');
+       }
+     }
+     
+     function showNotification(message, type) {
+       const notification = document.createElement('div');
+       notification.className = `notification ${type}`;
+       notification.innerHTML = message;
+       document.body.appendChild(notification);
+       
+       setTimeout(() => {
+         notification.remove();
+       }, 3000);
+     }
+     
+     // Toggle switch interactivity
+     document.querySelectorAll('.toggle-switch input').forEach(toggle => {
+       toggle.addEventListener('change', () => {
+         if (toggle.id === 'custom-cursor') {
+           const cursor = document.getElementById('cursor');
+           cursor.style.display = toggle.checked ? 'flex' : 'none';
+         }
+       });
+     });
+   </script>
+</body>
+</html>

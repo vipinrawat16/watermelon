@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - My Diary</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f7f4;
+            color: #333;
+        }
+        
+        .back-link {
+            color: #3498db;
+            text-decoration: none;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .search-box {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .search-box input {
+            padding: 10px;
+            width: 300px;
+            border: 2px solid #bdc3c7;
+            border-radius: 5px;
+        }
+        
+        .search-box button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .search-results {
+            margin-top: 30px;
+        }
+        
+        .search-info {
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .entry {
+            background-color: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 5px solid #e74c3c;
+        }
+        
+        .entry-date {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        
+        .entry-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .entry-content {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .entry-link {
+            color: #e74c3c;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .entry-link:hover {
+            text-decoration: underline;
+        }
+        
+        .highlight {
+            background-color: #f39c12;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .no-results {
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+            margin: 40px 0;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-link">← Back to All Entries</a>
+    
+    <h1>🔍 Search Your Diary</h1>
+    
+    <div class="search-box">
+        <form action="/search" method="get">
+            <input type="text" name="q" value="{{ search_term }}" placeholder="Search your diary..." />
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    
+    <div class="search-results">
+        {% if search_term %}
+            <div class="search-info">
+                {% if entries %}
+                    Found {{ entries|length }} result(s) for "{{ search_term }}"
+                {% else %}
+                    No results found for "{{ search_term }}"
+                {% endif %}
+            </div>
+            
+            {% if entries %}
+                {% for entry in entries %}
+                <div class="entry">
+                    <div class="entry-date">{{ entry[2] }} | Created: {{ entry[5] }}</div>
+                    <div class="entry-title">
+                        {% if entry[3] %}
+                            {{ entry[3] }}
+                        {% else %}
+                            Entry #{{ entry[0] }}
+                        {% endif %}
+                    </div>
+                    <div class="entry-content">
+                        {% if entry[4]|length > 200 %}
+                            {{ entry[4][:200] }}...
+                        {% else %}
+                            {{ entry[4] }}
+                        {% endif %}
+                    </div>
+                    <a href="/entry/{{ entry[0] }}" class="entry-link">Read Full Entry →</a>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-results">
+                    <p>No entries found matching your search.</p>
+                    <p>Try different keywords or check your spelling.</p>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="search-info">
+                Enter a search term to find entries in your diary.
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

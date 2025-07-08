@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watermelon Study Hub - View Notes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .note-card {
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+        .note-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .note-preview {
+            max-height: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .tag-badge {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin: 2px;
+        }
+        .search-filters {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg gradient-bg">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{{ url_for('dashboard') }}">
+                <i class="fas fa-seedling"></i> Watermelon Study Hub
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link text-white" href="{{ url_for('add_note') }}">
+                    <i class="fas fa-plus"></i> Add Note
+                </a>
+                <a class="nav-link text-white" href="{{ url_for('dashboard') }}">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="fas fa-sticky-note text-primary"></i> My Study Notes</h2>
+                    <a href="{{ url_for('add_note') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add New Note
+                    </a>
+                </div>
+
+                <!-- Search and Filters -->
+                <div class="search-filters">
+                    <form method="GET" id="filterForm">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="search" class="form-label">Search Notes</label>
+                                <input type="text" class="form-control" id="search" name="search" 
+                                       value="{{ search_query }}" placeholder="Search title, content, or tags...">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="subject" class="form-label">Subject</label>
+                                <select class="form-select" id="subject" name="subject" onchange="document.getElementById('filterForm').submit()">
+                                    <option value="">All Subjects</option>
+                                    {% for subject in subjects %}
+                                        <option value="{{ subject.name }}" {% if subject_filter == subject.name %}selected{% endif %}>
+                                            {{ subject.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="topic" class="form-label">Topic</label>
+                                <input type="text" class="form-control" id="topic" name="topic" 
+                                       value="{{ topic_filter }}" placeholder="Enter topic...">
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label class="form-label">&nbsp;</label>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-outline-primary">
+                                        <i class="fas fa-search"></i> Filter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Notes Grid -->
+                {% if notes %}
+                <div class="row">
+                    {% for note in notes %}
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card note-card h-100" onclick="expandNote({{ note.id }})">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0 text-truncate">{{ note.title }}</h6>
+                                <div class="dropdown" onclick="event.stopPropagation()">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{{ url_for('edit_note', note_id=note.id) }}">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <form method="POST" action="{{ url_for('delete_note', note_id=note.id) }}" 
+                                                  style="display: inline;" onsubmit="return confirm('Are you sure?')">
+                                                <button type="submit" class="dropdown-item text-danger">
+                                                    <i class="fas fa-trash"></i> Delete
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="note-preview">
+                                    {{ note.content[:150] }}{% if note.content|length > 150 %}...{% endif %}
+                                </div>
+                                <div class="mt-3">
+                                    <small class="text-muted">
+                                        <i class="fas fa-book"></i> {{ note.subject }}
+                                        {% if note.topic %}• {{ note.topic }}{% endif %}
+                                    </small>
+                                </div>
+                                {% if note.tags %}
+                                <div class="mt-2">
+                                    {% for tag in note.tags.split(',') %}
+                                        {% if tag.strip() %}
+                                            <span class="tag-badge">{{ tag.strip() }}</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="card-footer text-muted">
+                                <small>
+                                    <i class="fas fa-clock"></i> {{ note.updated_at.strftime('%Y-%m-%d %H:%M') }}
+                                    {% if note.is_scanned %}
+                                        <span class="badge bg-info ms-2">
+                                            <i class="fas fa-camera"></i> Scanned
+                                        </span>
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-sticky-note fa-4x text-muted mb-3"></i>
+                    <h4 class="text-muted">No notes found</h4>
+                    <p class="text-muted">
+                        {% if search_query or subject_filter or topic_filter %}
+                            Try adjusting your search criteria or <a href="{{ url_for('view_notes') }}">view all notes</a>.
+                        {% else %}
+                            Start by <a href="{{ url_for('add_note') }}">creating your first note</a>!
+                        {% endif %}
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Note Modal -->
+    <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="noteModalLabel">Note Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="noteModalBody">
+                    <!-- Note content will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="editNoteBtn">Edit Note</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentNoteId = null;
+        const notes = {{ notes_json | tojson | safe }};
+
+        function expandNote(noteId) {
+            const note = notes.find(n => n.id === noteId);
+            if (note) {
+                currentNoteId = noteId;
+                document.getElementById('noteModalLabel').textContent = note.title;
+                
+                const modalBody = document.getElementById('noteModalBody');
+                modalBody.innerHTML = `
+                    <div class="mb-3">
+                        <strong>Subject:</strong> ${note.subject}
+                        ${note.topic ? `<br><strong>Topic:</strong> ${note.topic}` : ''}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Content:</strong>
+                        <div class="mt-2 p-3 bg-light rounded">
+                            ${note.content.replace(/\n/g, '<br>')}
+                        </div>
+                    </div>
+                    ${note.tags ? `
+                        <div class="mb-3">
+                            <strong>Tags:</strong>
+                            <div class="mt-1">
+                                ${note.tags.split(',').map(tag => tag.trim() ? `<span class="tag-badge">${tag.trim()}</span>` : '').join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                    <div class="text-muted">
+                        <small>
+                            Created: ${new Date(note.created_at).toLocaleString()}<br>
+                            Updated: ${new Date(note.updated_at).toLocaleString()}
+                            ${note.is_scanned ? '<br><span class="badge bg-info">OCR Scanned</span>' : ''}
+                        </small>
+                    </div>
+                `;
+                
+                document.getElementById('editNoteBtn').onclick = () => {
+                    window.location.href = `/notes/edit/${noteId}`;
+                };
+                
+                new bootstrap.Modal(document.getElementById('noteModal')).show();
+            }
+        }
+
+        // Auto-submit search form on enter
+        document.getElementById('search').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('filterForm').submit();
+            }
+        });
+    </script>
+</body>
+</html>

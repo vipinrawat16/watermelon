@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diary</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, Arial, sans-serif;
+            background: linear-gradient(135deg, #FFE5E7 0%, #F0FFF4 50%, #E8F5E8 100%);
+            color: #2C3E50;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 20px auto;
+            padding-bottom: 50px;
+        }
+        .header {
+            background: linear-gradient(45deg, #FF6B6B, #FF8E8E, #FFA8A8);
+            color: white;
+            text-align: center;
+            padding: 25px 0;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 20%, transparent 20%);
+            background-size: 30px 30px;
+            animation: float 20s linear infinite;
+        }
+        @keyframes float {
+            0% { transform: translateX(-50px) translateY(-50px); }
+            100% { transform: translateX(50px) translateY(50px); }
+        }
+        .header h1 {
+            position: relative;
+            z-index: 1;
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .entry-form, .entry-list {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1), 0 1px 8px rgba(0,0,0,0.2);
+            margin-top: 25px;
+            border: 3px solid #FFE5E7;
+            position: relative;
+        }
+        .entry-form::before, .entry-list::before {
+            content: '🍉';
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            font-size: 30px;
+            background: white;
+            padding: 5px 10px;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .entry-form h2, .entry-list h2 {
+            color: #FF6B6B;
+            margin-top: 0;
+            font-size: 1.8em;
+            text-align: center;
+        }
+        .entry {
+            padding: 20px;
+            margin: 15px 0;
+            background: linear-gradient(135deg, #FFF9F9, #F8FFF8);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-left: 5px solid #FF8E8E;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .entry:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .entry h3 {
+            color: #2C3E50;
+            margin-top: 0;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .entry h3::before {
+            content: '📝';
+            font-size: 0.8em;
+        }
+        .mood {
+            font-size: 16px;
+            color: #7F8C8D;
+            background: #F0F8FF;
+            padding: 5px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin: 8px 0;
+            border: 2px solid #E8F4FD;
+        }
+        .mood::before {
+            margin-right: 5px;
+        }
+        .mood[class*="happy"]::before { content: '😊'; }
+        .mood[class*="sad"]::before { content: '😢'; }
+        .mood[class*="neutral"]::before { content: '😐'; }
+        .entry p {
+            line-height: 1.6;
+            color: #34495E;
+            background: rgba(255,255,255,0.7);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        .buttons {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        button {
+            background: linear-gradient(45deg, #FF6B6B, #FF8E8E);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        button:hover {
+            background: linear-gradient(45deg, #FF5252, #FF7979);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+        button:hover::before {
+            left: 100%;
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        /* Form styling */
+        #add-entry-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        #title, #content, #mood {
+            padding: 15px;
+            border: 2px solid #FFE5E7;
+            border-radius: 15px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+        }
+        #title:focus, #content:focus, #mood:focus {
+            outline: none;
+            border-color: #FF8E8E;
+            box-shadow: 0 0 15px rgba(255, 142, 142, 0.3);
+            transform: scale(1.02);
+        }
+        #content {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        #mood {
+            cursor: pointer;
+        }
+        /* Back button */
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(45deg, #4ECDC4, #44A08D);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+        }
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
+        }
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                margin: 10px auto;
+            }
+            .header h1 {
+                font-size: 2em;
+            }
+            .entry-form, .entry-list {
+                padding: 20px;
+                margin-top: 20px;
+            }
+            .buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>My Diary 🍉</h1>
+        </div>
+
+        <div class="entry-form">
+            <h2>Add a New Entry</h2>
+            <form id="add-entry-form">
+                <input type="text" id="title" placeholder="Title" required>
+                <textarea id="content" placeholder="Write something..."></textarea>
+                <select id="mood">
+                    <option value="happy">Happy</option>
+                    <option value="sad">Sad</option>
+                    <option value="neutral" selected>Neutral</option>
+                </select>
+                <button type="submit">Add Entry</button>
+            </form>
+        </div>
+
+        <div class="entry-list">
+            <h2>Your Entries</h2>
+            {% for entry in entries %}
+            <div class="entry">
+                <h3>{{ entry.title }}</h3>
+                <small class="mood">Mood: {{ entry.mood }}</small>
+                <p>{{ entry.content }}</p>
+                <div class="buttons">
+                    <button onclick="editEntry({{ entry.id }})">Edit</button>
+                    <button onclick="deleteEntry({{ entry.id }})">Delete</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+<script>
+    document.getElementById('add-entry-form').onsubmit = function(e) {
+        e.preventDefault();
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+        const mood = document.getElementById('mood').value;
+
+        fetch('/diary/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: title,
+                content: content,
+                mood: mood
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+            } else {
+                location.reload();
+            }
+        });
+    };
+
+    function editEntry(id) {
+        // Find the entry element
+        const entryElement = event.target.closest('.entry');
+        const titleElement = entryElement.querySelector('h3');
+        const contentElement = entryElement.querySelector('p');
+        const moodElement = entryElement.querySelector('.mood');
+        
+        // Get current values
+        const currentTitle = titleElement.textContent;
+        const currentContent = contentElement.textContent;
+        const currentMood = moodElement.textContent.replace('Mood: ', '');
+        
+        // Create edit form
+        const editForm = document.createElement('div');
+        editForm.innerHTML = `
+            <input type="text" id="edit-title-${id}" value="${currentTitle}" style="width: 100%; margin-bottom: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            <textarea id="edit-content-${id}" style="width: 100%; height: 100px; margin-bottom: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">${currentContent}</textarea>
+            <select id="edit-mood-${id}" style="margin-bottom: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="happy" ${currentMood === 'happy' ? 'selected' : ''}>Happy</option>
+                <option value="sad" ${currentMood === 'sad' ? 'selected' : ''}>Sad</option>
+                <option value="neutral" ${currentMood === 'neutral' ? 'selected' : ''}>Neutral</option>
+            </select><br>
+            <button onclick="saveEdit(${id})" style="margin-right: 10px;">Save</button>
+            <button onclick="cancelEdit(${id})">Cancel</button>
+        `;
+        
+        // Replace content with edit form
+        titleElement.style.display = 'none';
+        contentElement.style.display = 'none';
+        moodElement.style.display = 'none';
+        entryElement.querySelector('.buttons').style.display = 'none';
+        
+        entryElement.insertBefore(editForm, entryElement.querySelector('.buttons'));
+        editForm.id = `edit-form-${id}`;
+    }
+    
+    function saveEdit(id) {
+        const title = document.getElementById(`edit-title-${id}`).value;
+        const content = document.getElementById(`edit-content-${id}`).value;
+        const mood = document.getElementById(`edit-mood-${id}`).value;
+        
+        fetch(`/diary/edit/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: title,
+                content: content,
+                mood: mood
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+            } else {
+                location.reload();
+            }
+        });
+    }
+    
+    function cancelEdit(id) {
+        const entryElement = document.getElementById(`edit-form-${id}`).parentElement;
+        const editForm = document.getElementById(`edit-form-${id}`);
+        
+        // Show original content
+        entryElement.querySelector('h3').style.display = 'block';
+        entryElement.querySelector('p').style.display = 'block';
+        entryElement.querySelector('.mood').style.display = 'block';
+        entryElement.querySelector('.buttons').style.display = 'block';
+        
+        // Remove edit form
+        editForm.remove();
+    }
+
+    function deleteEntry(id) {
+        fetch(`/diary/delete/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+            } else {
+                location.reload();
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

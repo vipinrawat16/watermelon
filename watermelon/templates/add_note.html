@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watermelon Study Hub - Add Note</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .drop-zone {
+            border: 2px dashed #ccc;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: #007bff;
+            background: #e3f2fd;
+        }
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        .ocr-result {
+            background: #e8f5e8;
+            border: 1px solid #28a745;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg gradient-bg">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{{ url_for('dashboard') }}">
+                <i class="fas fa-seedling"></i> Watermelon Study Hub
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link text-white" href="{{ url_for('dashboard') }}">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header gradient-bg text-center">
+                        <h4><i class="fas fa-sticky-note"></i> Add Smart Note</h4>
+                        <p class="mb-0">Create notes with text or scan images to extract text automatically</p>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data" id="noteForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="title" class="form-label">Note Title</label>
+                                    <input type="text" class="form-control" id="title" name="title" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="subject" class="form-label">Subject</label>
+                                    <select class="form-select" id="subject" name="subject" required onchange="loadTopics()">
+                                        <option value="">Select Subject</option>
+                                        {% for subject in subjects %}
+                                            <option value="{{ subject.name }}">{{ subject.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="topic" class="form-label">Topic</label>
+                                    <select class="form-select" id="topic" name="topic" required>
+                                        <option value="">Select Topic</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="tags" class="form-label">Tags (comma-separated)</label>
+                                    <input type="text" class="form-control" id="tags" name="tags" placeholder="e.g., important, revision, exam">
+                                </div>
+                            </div>
+
+                            <!-- File Upload with OCR -->
+                            <div class="mb-4">
+                                <label class="form-label">Upload Image for OCR Text Extraction</label>
+                                <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+                                    <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                                    <h5>Drag & Drop or Click to Upload</h5>
+                                    <p class="text-muted">Supports JPG, PNG, PDF files</p>
+                                    <input type="file" id="fileInput" name="file" accept=".jpg,.jpeg,.png,.pdf" style="display: none;" onchange="handleFileSelect(event)">
+                                </div>
+                                <div id="filePreview"></div>
+                                <div id="ocrResult"></div>
+                            </div>
+
+                            <!-- Note Content -->
+                            <div class="mb-3">
+                                <label for="content" class="form-label">Note Content</label>
+                                <textarea class="form-control" id="content" name="content" rows="10" 
+                                         placeholder="Write your notes here or upload an image above to extract text automatically..."></textarea>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button type="button" class="btn btn-secondary me-md-2" onclick="clearForm()">
+                                    <i class="fas fa-eraser"></i> Clear
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Save Note
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Recent Notes -->
+                <div class="card mt-4 shadow">
+                    <div class="card-header">
+                        <h6><i class="fas fa-history"></i> Recent Notes</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 mb-2">
+                                <div class="card border-left-primary">
+                                    <div class="card-body p-3">
+                                        <h6 class="card-title">Constitution Basics</h6>
+                                        <p class="card-text small text-muted">Polity • 2 hours ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <div class="card border-left-success">
+                                    <div class="card-body p-3">
+                                        <h6 class="card-title">Economic Survey</h6>
+                                        <p class="card-text small text-muted">Economics • 1 day ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <div class="card border-left-info">
+                                    <div class="card-body p-3">
+                                        <h6 class="card-title">Geography Notes</h6>
+                                        <p class="card-text small text-muted">Geography • 3 days ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Load topics based on selected subject
+        function loadTopics() {
+            const subjectSelect = document.getElementById('subject');
+            const topicSelect = document.getElementById('topic');
+            const subjectId = subjectSelect.selectedIndex;
+            
+            topicSelect.innerHTML = '<option value="">Select Topic</option>';
+            
+            if (subjectId > 0) {
+                // Simulate loading topics (replace with actual API call)
+                const topics = {
+                    'General Studies': ['Current Affairs', 'General Knowledge'],
+                    'History': ['Ancient India', 'Medieval India', 'Modern India'],
+                    'Geography': ['Physical Geography', 'Human Geography'],
+                    'Polity': ['Fundamental Rights', 'Directive Principles'],
+                    'Economics': ['Economic Development', 'Public Finance'],
+                    'Science & Technology': ['Latest Developments', 'Innovations'],
+                    'Environment': ['Climate Change', 'Conservation']
+                };
+                
+                const selectedSubject = subjectSelect.value;
+                if (topics[selectedSubject]) {
+                    topics[selectedSubject].forEach(topic => {
+                        const option = document.createElement('option');
+                        option.value = topic;
+                        option.textContent = topic;
+                        topicSelect.appendChild(option);
+                    });
+                }
+            }
+        }
+
+        // File handling
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                displayFilePreview(file);
+                if (file.type.startsWith('image/')) {
+                    simulateOCR(file);
+                }
+            }
+        }
+
+        function displayFilePreview(file) {
+            const preview = document.getElementById('filePreview');
+            preview.innerHTML = '';
+            
+            if (file.type.startsWith('image/')) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.className = 'preview-image';
+                preview.appendChild(img);
+            } else {
+                preview.innerHTML = `<div class="alert alert-info"><i class="fas fa-file"></i> ${file.name} uploaded</div>`;
+            }
+        }
+
+        function simulateOCR(file) {
+            const ocrResult = document.getElementById('ocrResult');
+            const fileType = file.type;
+            const fileName = file.name.toLowerCase();
+            
+            ocrResult.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Processing file for text extraction...</div>';
+            
+            // Show different messages based on file type
+            setTimeout(() => {
+                let extractedText = '';
+                
+                if (fileName.endsWith('.pdf')) {
+                    extractedText = `Extracted from PDF:\n\nThis PDF document contains important study material covering:\n
+• Chapter 1: Introduction to the Subject\n• Key Concepts and Definitions\n• Historical Background and Context\n• Important Facts and Figures\n• Case Studies and Examples\n• Practice Questions and Solutions\n\nNote: For actual PDF text extraction, upload a real PDF file. The system will automatically extract text content.`;
+                } else if (fileType.startsWith('image/')) {
+                    extractedText = `Extracted from image:\n\nThis scanned document contains:\n
+• Important definitions and concepts\n• Key points highlighted in the text\n• Diagrams and flowcharts\n• Mathematical formulas and equations\n• Historical dates and events\n• Current affairs and recent developments\n\nNote: For actual OCR, install Tesseract-OCR. The system will automatically extract text from images.`;
+                } else {
+                    extractedText = `File processed:\n\nContent extracted from uploaded file:\n
+• Main topics and subtopics\n• Important explanations\n• Key terminology\n• Relevant examples\n• Study tips and notes\n\nThe actual text extraction will depend on the file type and OCR configuration.`;
+                }
+                
+                ocrResult.innerHTML = `
+                    <div class="ocr-result">
+                        <h6><i class="fas fa-magic"></i> Extracted Text:</h6>
+                        <p style="white-space: pre-line; max-height: 200px; overflow-y: auto;">${extractedText}</p>
+                        <div class="mt-2">
+                            <button type="button" class="btn btn-sm btn-success me-2" onclick="appendToContent()">
+                                <i class="fas fa-plus"></i> Add to Note
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary" onclick="replaceContent()">
+                                <i class="fas fa-refresh"></i> Replace Content
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }, 1500);
+        }
+
+        function appendToContent() {
+            const extractedText = document.querySelector('.ocr-result p').textContent;
+            const contentTextarea = document.getElementById('content');
+            contentTextarea.value += (contentTextarea.value ? '\n\n' : '') + extractedText;
+        }
+        
+        function replaceContent() {
+            const extractedText = document.querySelector('.ocr-result p').textContent;
+            const contentTextarea = document.getElementById('content');
+            contentTextarea.value = extractedText;
+        }
+
+        function clearForm() {
+            document.getElementById('noteForm').reset();
+            document.getElementById('filePreview').innerHTML = '';
+            document.getElementById('ocrResult').innerHTML = '';
+            document.getElementById('topic').innerHTML = '<option value="">Select Topic</option>';
+        }
+
+        // Drag and drop functionality
+        const dropZone = document.getElementById('dropZone');
+        
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                document.getElementById('fileInput').files = files;
+                handleFileSelect({ target: { files: files } });
+            }
+        });
+    </script>
+</body>
+</html>
